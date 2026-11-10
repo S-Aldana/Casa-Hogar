@@ -112,3 +112,43 @@ async function cuentaEsAdmin() {
   const { data, error } = await cliente().rpc("es_admin");
   return !error && data === true;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const menuBtn = document.getElementById("menu-movil-btn");
+  const menuDropdown = document.getElementById("menu-movil-dropdown");
+
+  if (menuBtn && menuDropdown) {
+    menuBtn.addEventListener("click", () => {
+      menuDropdown.classList.toggle("hidden");
+    });
+
+    // Cerrar el menú móvil al hacer clic en cualquier enlace interno
+    const mobileLinks = menuDropdown.querySelectorAll("a, button");
+    mobileLinks.forEach(el => {
+      el.addEventListener("click", () => {
+        if (!el.id.includes("btn-sesion") && !el.id.includes("contacto")) {
+          menuDropdown.classList.add("hidden");
+        }
+      });
+    });
+  }
+
+  // Sincronizar el botón de sesión móvil con el de escritorio si es necesario
+  const btnSesionMovil = document.getElementById("btn-sesion-movil");
+  const btnSesionEscritorio = document.getElementById("btn-sesion");
+  if (btnSesionMovil && btnSesionEscritorio) {
+    btnSesionMovil.addEventListener("click", () => {
+      btnSesionEscritorio.click();
+      menuDropdown.classList.add("hidden");
+    });
+  }
+
+  const btnContactoMovil = document.getElementById("btn-open-contacto-movil");
+  const btnContactoEscritorio = document.getElementById("btn-open-contacto");
+  if (btnContactoMovil && btnContactoEscritorio) {
+    btnContactoMovil.addEventListener("click", () => {
+      btnContactoEscritorio.click();
+      menuDropdown.classList.add("hidden");
+    });
+  }
+});

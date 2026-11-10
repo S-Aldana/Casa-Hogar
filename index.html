@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema Web Casa Hogar - Fundación Servimos</title>
+  <title>Casa Hogar - Fundación Servimos</title>
+  <link rel="icon" type="image/jpeg" href="assets/logos/logo.jpg">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="style/index.css">
@@ -11,7 +12,9 @@
 <body class="flex flex-col min-h-screen">
 
   <header class="bg-[#4c0839] text-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+      
+      <!-- LOGO E IDENTIFICACIÓN -->
       <div class="flex items-center gap-3">
         <img src="assets/logos/logo.jpg" alt="Logo Casa Hogar" class="w-10 h-10 rounded-full object-cover border-2 border-amber-300 shadow-sm">
         <div>
@@ -19,7 +22,14 @@
           <p class="text-xs text-amber-300 font-medium">Fundación Servimos</p>
         </div>
       </div>
-      <nav class="flex items-center gap-6 text-sm font-medium">
+
+      <!-- BOTÓN MENÚ HAMBURGUESA (MÓVIL) -->
+      <button type="button" id="menu-movil-btn" class="md:hidden text-white hover:text-amber-300 transition focus:outline-none cursor-pointer p-1">
+        <i data-lucide="menu" class="w-7 h-7"></i>
+      </button>
+
+      <!-- NAVEGACIÓN ESCRITORIO (OCULTA EN MÓVIL) -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
         <a href="#cartelera" class="nav-link hover:text-amber-300 transition flex items-center gap-1.5 cursor-pointer">
           <i data-lucide="megaphone" class="w-4 h-4"></i> Cartelera
         </a>
@@ -39,6 +49,30 @@
           <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span id="btn-sesion-texto">Iniciar sesión</span>
         </button>
       </nav>
+    </div>
+
+    <!-- MENÚ DESPLEGABLE MÓVIL (OCULTO POR DEFECTO) -->
+    <div id="menu-movil-dropdown" class="hidden md:hidden bg-[#3b062c] border-t border-white/10 px-6 py-4 space-y-3">
+      <a href="#cartelera" class="nav-link-movil block hover:text-amber-300 transition py-1.5 text-sm font-medium flex items-center gap-2">
+        <i data-lucide="megaphone" class="w-4 h-4"></i> Cartelera
+      </a>
+      <a href="#conocenos" class="nav-link-movil block hover:text-amber-300 transition py-1.5 text-sm font-medium flex items-center gap-2">
+        <i data-lucide="video" class="w-4 h-4"></i> Conócenos
+      </a>
+      <a href="#consulta" class="nav-link-movil block hover:text-amber-300 transition py-1.5 text-sm font-medium flex items-center gap-2">
+        <i data-lucide="search" class="w-4 h-4"></i> Consultar
+      </a>
+      <a href="#como-ser-parte" class="nav-link-movil block hover:text-amber-300 transition py-1.5 text-sm font-medium flex items-center gap-2">
+        <i data-lucide="help-circle" class="w-4 h-4"></i> ¿Cómo ser parte?
+      </a>
+      <button type="button" id="btn-open-contacto-movil" class="w-full text-left hover:text-amber-300 transition py-1.5 text-sm font-medium flex items-center gap-2 bg-transparent border-none text-white cursor-pointer">
+        <i data-lucide="map-pin" class="w-4 h-4"></i> Contacto
+      </button>
+      <div class="pt-2 border-t border-white/10">
+        <button type="button" id="btn-sesion-movil" class="w-full bg-amber-400 text-black px-4 py-2 rounded-xl text-xs font-bold hover:bg-amber-300 transition flex items-center justify-center gap-2 cursor-pointer">
+          <i data-lucide="lock" class="w-3.5 h-3.5"></i> <span id="btn-sesion-texto-movil">Iniciar sesión</span>
+        </button>
+      </div>
     </div>
   </header>
 
