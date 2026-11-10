@@ -1,11 +1,13 @@
 // ===== Portal público (index.html): cartelera + consulta de beneficiarias =====
-document.addEventListener("DOMContentLoaded", async () => {
-  await asegurarDB();
+document.addEventListener("DOMContentLoaded", () => {
   iniciarCartelera();
   iniciarBuscador();
+  iniciarSesionAdmin();
 });
 
-function iniciarCartelera() {
+const MSG_CAJA = "col-span-full bg-white border-2 border-gray-200 rounded-2xl p-6 text-center text-gray-400 text-sm";
+
+async function iniciarCartelera() {
   const cont = document.getElementById("contenedor-anuncios");
   const filtro = document.getElementById("filtro-categoria");
   if (!cont) return;
@@ -14,25 +16,33 @@ function iniciarCartelera() {
     filtro.innerHTML =
       `<option value="todas">Todas</option>` +
       Object.entries(CATEGORIAS).map(([k, c]) => `<option value="${k}">${c.label}</option>`).join("");
-    filtro.onchange = () => renderAnuncios(cont, filtro.value);
   }
-  renderAnuncios(cont, "todas");
+
+  cont.innerHTML = `<div class="${MSG_CAJA}">Cargando comunicados...</div>`;
+
+  let anuncios = [];
+  try {
+    anuncios = await listarAnuncios();
+  } catch (e) {
+    console.error(e);
+    cont.innerHTML = `<div class="${MSG_CAJA}">No se pudieron cargar los comunicados. Intente de nuevo más tarde.</div>`;
+    return;
+  }
+
+  if (filtro) filtro.onchange = () => renderAnuncios(cont, anuncios, filtro.value);
+  renderAnuncios(cont, anuncios, "todas");
 }
 
-function renderAnuncios(cont, categoria) {
-  const todos = obtenerDB().anuncios;
+function renderAnuncios(cont, todos, categoria) {
   const lista = categoria === "todas" ? todos : todos.filter(a => a.categoria === categoria);
 
   if (lista.length === 0) {
-    cont.innerHTML = `
-      <div class="col-span-full bg-white border-2 border-gray-200 rounded-2xl p-6 text-center text-gray-400 text-sm">
-        ${todos.length ? "No hay anuncios en esta categoría." : "No hay comunicados publicados en este momento."}
-      </div>`;
+    cont.innerHTML = `<div class="${MSG_CAJA}">${todos.length ? "No hay anuncios en esta categoría." : "No hay comunicados publicados en este momento."}</div>`;
     return;
   }
 
   cont.innerHTML = lista.map(a => {
-    const c = CATEGORIAS[a.categoria];
+    const c = CATEGORIAS[a.categoria] || CATEGORIAS.informativo;
     return `
       <div class="bg-white rounded-2xl border-2 border-gray-200 p-6 space-y-4 shadow-sm hover:shadow-md transition relative overflow-hidden group">
         <div class="absolute top-0 right-0 ${c.badge} text-[10px] font-extrabold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
@@ -52,21 +62,15 @@ function renderAnuncios(cont, categoria) {
   if (window.lucide) lucide.createIcons();
 }
 
-// Nombre abreviado para el público: "Valentina Gómez Aldana" -> "Valentina G."
-function nombreCorto(nombre) {
-  const p = String(nombre || "").trim().split(/\s+/);
-  return p.length > 1 ? `${p[0]} ${p[1][0].toUpperCase()}.` : p[0];
-}
-
 function iniciarBuscador() {
   const form = document.getElementById("form-consulta");
   const input = document.getElementById("input-documento");
   const res = document.getElementById("resultado-consulta");
   if (!form || !input || !res) return;
 
-  form.addEventListener("submit", e => {
+  form.addEventListener("submit", async e => {
     e.preventDefault();
-    const doc = soloDigitos(input.value);
+    const doc = input.value.replace(/\D/g, "");
     const base = "p-4 rounded-xl text-xs font-medium border ";
 
     if (!doc) {
@@ -75,7 +79,18 @@ function iniciarBuscador() {
       return;
     }
 
-    const b = obtenerDB().beneficiarias.find(x => soloDigitos(x.documento) === doc);
+    res.className = base + "bg-gray-50 border-gray-200 text-gray-500";
+    res.innerHTML = "Consultando...";
+
+    let b;
+    try {
+      b = await consultarBeneficiaria(doc);
+    } catch (err) {
+      console.error(err);
+      res.className = base + "bg-red-50 border-red-200 text-red-800";
+      res.innerHTML = "No se pudo realizar la consulta. Intente de nuevo más tarde.";
+      return;
+    }
 
     if (!b) {
       res.className = base + "bg-red-50 border-red-200 text-red-800 space-y-1";
@@ -92,7 +107,7 @@ function iniciarBuscador() {
     res.className = base + "bg-white border-gray-200 space-y-3";
     res.innerHTML = `
       <div class="flex items-center justify-between gap-3 border-b border-gray-100 pb-3">
-        <span class="text-sm font-bold text-gray-900">${esc(nombreCorto(b.nombre))}</span>
+        <span class="text-sm font-bold text-gray-900">${esc(b.nombre_corto)}</span>
         <span class="px-3 py-1 rounded-full text-[11px] font-bold border ${badge} flex items-center gap-1.5">
           <i data-lucide="${icono}" class="w-3.5 h-3.5"></i>${esc(b.estado)}
         </span>
@@ -102,4 +117,61 @@ function iniciarBuscador() {
       </p>`;
     if (window.lucide) lucide.createIcons();
   });
+}
+
+// ---------- Botón "Iniciar sesión" de la administración ----------
+async function iniciarSesionAdmin() {
+  const btn = document.getElementById("btn-sesion");
+  const modal = document.getElementById("modal-login");
+  if (!btn || !modal) return;
+
+  const texto = document.getElementById("btn-sesion-texto");
+  const form = document.getElementById("form-login");
+  const err = document.getElementById("login-error");
+  const correo = document.getElementById("login-correo");
+  const clave = document.getElementById("login-clave");
+  const enviar = document.getElementById("btn-login");
+  let esAdmin = false;
+
+  const abrir = () => { err.classList.add("hidden"); modal.classList.remove("hidden"); correo.focus(); };
+  const cerrar = () => modal.classList.add("hidden");
+  const mostrarError = msg => { err.textContent = msg; err.classList.remove("hidden"); };
+
+  // Con sesión de administradora el botón lleva directo al panel
+  btn.addEventListener("click", () => { if (esAdmin) location.href = "admin.html"; else abrir(); });
+  document.getElementById("btn-cerrar-login").addEventListener("click", cerrar);
+  modal.addEventListener("click", e => { if (e.target === modal) cerrar(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") cerrar(); });
+
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    err.classList.add("hidden");
+    enviar.disabled = true;
+    try {
+      await iniciarSesion(correo.value.trim(), clave.value);
+      if (!(await cuentaEsAdmin())) {
+        await cerrarSesion();
+        mostrarError("Esta cuenta no tiene permisos de administración.");
+        return;
+      }
+      clave.value = "";
+      location.href = "admin.html";
+    } catch (ex) {
+      console.error(ex);
+      mostrarError(ex && ex.status === 400
+        ? "Correo o contraseña incorrectos."
+        : "No se pudo iniciar sesión. Intente de nuevo.");
+    } finally {
+      enviar.disabled = false;
+    }
+  });
+
+  if (SUPABASE_CONFIGURADO) {
+    try {
+      if ((await obtenerSesion()) && (await cuentaEsAdmin())) {
+        esAdmin = true;
+        texto.textContent = "Panel Admin";
+      }
+    } catch (e) { /* sin conexión: el botón sigue como "Iniciar sesión" */ }
+  }
 }

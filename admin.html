@@ -21,14 +21,19 @@
           <p class="text-xs text-amber-300">Gestión integral de beneficiarias y cartelera de anuncios</p>
         </div>
       </div>
-      <a href="index.html" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-medium transition flex items-center gap-2">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Sitio Público
-      </a>
+      <div class="flex items-center gap-2">
+        <button id="btn-cerrar-sesion" type="button" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-medium transition flex items-center gap-2 cursor-pointer">
+          <i data-lucide="log-out" class="w-4 h-4"></i> Cerrar sesión
+        </button>
+        <a href="index.html" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-medium transition flex items-center gap-2">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Sitio Público
+        </a>
+      </div>
     </div>
   </header>
 
   <!-- CONTENIDO PRINCIPAL ADMIN -->
-  <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-8 space-y-10">
+  <main id="panel-admin" class="hidden flex-grow max-w-7xl w-full mx-auto px-6 py-8 space-y-10">
     
     <!-- GRID SUPERIOR: BENEFICIARIAS Y CARTELERA -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -195,28 +200,67 @@
     <p>Módulo de Administración Interna — Casa Hogar</p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="common.js"></script>
 
   <!-- SCRIPT INTEGRAL (BENEFICIARIAS Y CARTELERA) -->
   <script>
+    let datos = { anuncios: [], beneficiarias: [] };
+
+    function irAlInicio() { location.replace("index.html"); }
+
     document.addEventListener("DOMContentLoaded", async () => {
-      // Opciones de categoría desde common.js (mismas que usa el index)
       document.getElementById("select-categoria").innerHTML =
         Object.entries(CATEGORIAS).map(([k, c]) => `<option value="${k}">${c.label}</option>`).join("");
-      await asegurarDB();
-      cargarVistaAdmin();
+
+      configurarFormularios();
+      if (window.lucide) lucide.createIcons();
+
+      // Solo entra quien tenga sesión de administradora; el login está en el index
+      if (!SUPABASE_CONFIGURADO) { irAlInicio(); return; }
+
+      cliente().auth.onAuthStateChange(evento => {
+        if (evento === "SIGNED_OUT") irAlInicio();
+      });
+      document.getElementById("btn-cerrar-sesion").onclick = async () => { await cerrarSesion(); };
+
+      try {
+        if (!(await obtenerSesion())) { irAlInicio(); return; }
+        if (!(await cuentaEsAdmin())) { await cerrarSesion(); return; }
+        document.getElementById("panel-admin").classList.remove("hidden");
+        await recargarTodo();
+        if (window.lucide) lucide.createIcons();
+      } catch (e) {
+        console.error(e);
+        irAlInicio();
+      }
     });
 
-    function cargarVistaAdmin() {
-      const data = obtenerDB();
-      renderTablas(data);
+    // ---------- Datos ----------
+    async function recargarTodo() {
+      try {
+        const [anuncios, beneficiarias] = await Promise.all([listarAnuncios(), listarBeneficiarias()]);
+        datos = { anuncios, beneficiarias };
+        renderTablas(datos);
+      } catch (e) {
+        console.error(e);
+        alert("No se pudieron cargar los datos: " + (e.message || e));
+      }
+    }
 
-      // 1. Guardar o Actualizar Beneficiaria
+    function mostrarMensaje(id) {
+      const msg = document.getElementById(id);
+      msg.classList.remove("hidden");
+      setTimeout(() => msg.classList.add("hidden"), 3000);
+    }
+
+    function configurarFormularios() {
+      // 1. Guardar o actualizar beneficiaria
       const btnReg = document.getElementById("btn-guardar-nina");
       const btnCancelar = document.getElementById("btn-cancelar-edicion");
       const editDocOriginal = document.getElementById("edit-doc-original");
 
-      btnReg.onclick = function() {
+      btnReg.onclick = async function() {
         const nombre = document.getElementById("reg-nombre").value.trim();
         const documento = document.getElementById("reg-documento").value.trim();
         const acudiente = document.getElementById("reg-acudiente").value.trim();
@@ -229,45 +273,37 @@
           return;
         }
 
-        const dbActual = obtenerDB();
+        const registro = {
+          documento, nombre, estado,
+          acudiente: acudiente || null,
+          telefono: telefono || null,
+          detalle: detalle || null,
+          actualizado_en: new Date().toISOString()
+        };
         const docOriginal = editDocOriginal.value;
 
-        if (docOriginal === "") {
-          if (dbActual.beneficiarias.some(b => b.documento === documento)) {
-            alert("Ya existe una beneficiaria registrada con este número de documento.");
-            return;
-          }
-          dbActual.beneficiarias.push({
-            documento, nombre, acudiente: acudiente || "No asignado", telefono: telefono || "Sin registrar", estado, detalle: detalle || "Sin observaciones."
-          });
-        } else {
-          if (documento !== docOriginal && dbActual.beneficiarias.some(b => b.documento === documento)) {
-            alert("Ya existe otra beneficiaria con ese número de documento.");
-            return;
-          }
-          const index = dbActual.beneficiarias.findIndex(b => b.documento === docOriginal);
-          if (index !== -1) {
-            dbActual.beneficiarias[index] = {
-              documento, nombre, acudiente: acudiente || "No asignado", telefono: telefono || "Sin registrar", estado, detalle: detalle || "Sin observaciones."
-            };
-          }
+        btnReg.disabled = true;
+        try {
+          if (docOriginal === "") await crearBeneficiaria(registro);
+          else await actualizarBeneficiaria(docOriginal, registro);
           limpiarFormBeneficiaria();
+          await recargarTodo();
+          mostrarMensaje("msg-reg-nina");
+        } catch (e) {
+          console.error(e);
+          alert(e && e.code === "23505"
+            ? "Ya existe una beneficiaria registrada con este número de documento."
+            : "No se pudo guardar: " + ((e && e.message) || e));
+        } finally {
+          btnReg.disabled = false;
         }
-
-        guardarDB(dbActual);
-        limpiarFormBeneficiaria();
-        renderTablas(dbActual);
-
-        const msg = document.getElementById("msg-reg-nina");
-        msg.classList.remove("hidden");
-        setTimeout(() => msg.classList.add("hidden"), 3000);
       };
 
       btnCancelar.onclick = limpiarFormBeneficiaria;
 
-      // 2. Publicar Anuncio en Cartelera
+      // 2. Publicar anuncio en cartelera
       const btnPub = document.getElementById("btn-publicar");
-      btnPub.onclick = function() {
+      btnPub.onclick = async function() {
         const titulo = document.getElementById("input-titulo").value.trim();
         const categoria = document.getElementById("select-categoria").value;
         const fecha = document.getElementById("input-fecha").value;
@@ -278,26 +314,20 @@
           return;
         }
 
-        const dbActual = obtenerDB();
-        dbActual.anuncios.unshift({
-          id: Date.now(),
-          titulo,
-          categoria,
-          fecha: fecha || hoyISO(),
-          contenido
-        });
-
-        guardarDB(dbActual);
-
-        document.getElementById("input-titulo").value = "";
-        document.getElementById("input-fecha").value = "";
-        document.getElementById("input-contenido").value = "";
-
-        renderTablas(dbActual);
-
-        const msg = document.getElementById("mensaje-anuncio");
-        msg.classList.remove("hidden");
-        setTimeout(() => msg.classList.add("hidden"), 3000);
+        btnPub.disabled = true;
+        try {
+          await crearAnuncio({ titulo, categoria, fecha: fecha || hoyISO(), contenido });
+          document.getElementById("input-titulo").value = "";
+          document.getElementById("input-fecha").value = "";
+          document.getElementById("input-contenido").value = "";
+          await recargarTodo();
+          mostrarMensaje("mensaje-anuncio");
+        } catch (e) {
+          console.error(e);
+          alert("No se pudo publicar: " + ((e && e.message) || e));
+        } finally {
+          btnPub.disabled = false;
+        }
       };
     }
 
@@ -317,7 +347,7 @@
     }
 
     function renderTablas(data) {
-      // Renderizar Beneficiarias
+      // Beneficiarias
       const tbodyNinas = document.getElementById("tabla-beneficiarias");
       document.getElementById("contador-niñas").innerText = `${data.beneficiarias.length} registradas`;
 
@@ -336,7 +366,7 @@
                 <span class="text-[11px] text-gray-500">${esc(b.telefono || "Sin registrar")}</span>
               </td>
               <td class="p-3"><span class="px-2.5 py-0.5 rounded-full font-bold text-[10px] ${badgeColor}">${esc(b.estado)}</span></td>
-              <td class="p-3 text-gray-600 truncate max-w-xs">${esc(b.detalle)}</td>
+              <td class="p-3 text-gray-600 truncate max-w-xs">${esc(b.detalle || "Sin observaciones.")}</td>
               <td class="p-3 text-center space-x-2 whitespace-nowrap">
                 <button onclick="cargarParaModificar('${esc(b.documento)}')" class="bg-[#4c0839]/10 hover:bg-[#4c0839]/20 text-[#4c0839] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer">Modificar</button>
                 <button onclick="eliminarBeneficiaria('${esc(b.documento)}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded-lg transition font-medium cursor-pointer">Eliminar</button>
@@ -346,7 +376,7 @@
         }).join('');
       }
 
-      // Renderizar Anuncios en Cartelera
+      // Anuncios
       const tbodyAnuncios = document.getElementById("tabla-anuncios");
       document.getElementById("contador-anuncios").innerText = `${data.anuncios.length} activos`;
 
@@ -362,7 +392,7 @@
               <td class="p-3 font-bold text-gray-800">${esc(a.titulo)}</td>
               <td class="p-3 text-gray-600 truncate max-w-sm">${esc(a.contenido)}</td>
               <td class="p-3 text-center">
-                <button onclick="eliminarAnuncio(${a.id})" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded-lg transition font-medium cursor-pointer">Eliminar</button>
+                <button onclick="eliminarAnuncio(${Number(a.id)})" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded-lg transition font-medium cursor-pointer">Eliminar</button>
               </td>
             </tr>
           `;
@@ -372,18 +402,17 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    // Funciones Globales CRUD Anuncios y Niñas
+    // Funciones globales de los botones de las tablas
     window.cargarParaModificar = function(documento) {
-      const data = obtenerDB();
-      const nina = data.beneficiarias.find(b => b.documento === documento);
+      const nina = datos.beneficiarias.find(b => b.documento === documento);
       if (!nina) return;
 
       document.getElementById("reg-nombre").value = nina.nombre;
       document.getElementById("reg-documento").value = nina.documento;
-      document.getElementById("reg-acudiente").value = nina.acudiente === "No asignado" ? "" : (nina.acudiente || "");
-      document.getElementById("reg-telefono").value = nina.telefono === "Sin registrar" ? "" : (nina.telefono || "");
+      document.getElementById("reg-acudiente").value = nina.acudiente || "";
+      document.getElementById("reg-telefono").value = nina.telefono || "";
       document.getElementById("reg-estado").value = nina.estado;
-      document.getElementById("reg-detalle").value = nina.detalle === "Sin observaciones." ? "" : (nina.detalle || "");
+      document.getElementById("reg-detalle").value = nina.detalle || "";
       document.getElementById("edit-doc-original").value = nina.documento;
 
       document.getElementById("form-titulo").innerText = "Modificar Beneficiaria";
@@ -394,21 +423,27 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    window.eliminarBeneficiaria = function(documento) {
+    window.eliminarBeneficiaria = async function(documento) {
       if (!confirm("¿Desea eliminar esta beneficiaria?")) return;
-      const data = obtenerDB();
-      data.beneficiarias = data.beneficiarias.filter(b => b.documento !== documento);
-      guardarDB(data);
-      renderTablas(data);
-      limpiarFormBeneficiaria();
+      try {
+        await eliminarBeneficiariaDB(documento);
+        limpiarFormBeneficiaria();
+        await recargarTodo();
+      } catch (e) {
+        console.error(e);
+        alert("No se pudo eliminar: " + ((e && e.message) || e));
+      }
     };
 
-    window.eliminarAnuncio = function(id) {
+    window.eliminarAnuncio = async function(id) {
       if (!confirm("¿Desea eliminar este anuncio de la cartelera?")) return;
-      const data = obtenerDB();
-      data.anuncios = data.anuncios.filter(a => a.id !== id);
-      guardarDB(data);
-      renderTablas(data);
+      try {
+        await eliminarAnuncioDB(id);
+        await recargarTodo();
+      } catch (e) {
+        console.error(e);
+        alert("No se pudo eliminar: " + ((e && e.message) || e));
+      }
     };
   </script>
 </body>

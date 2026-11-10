@@ -1,8 +1,21 @@
 // ===== Capa de datos y utilidades compartidas (index.html + admin.html) =====
-// Por ahora usa localStorage. Al migrar a Supabase, solo se cambia este archivo
-// y los handlers del admin.
+// Conexión a Supabase. Requiere cargar antes la librería:
+// <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-const DB_KEY = "db_casa_hogar";
+// 1) PEGA AQUÍ los datos de tu proyecto (Project Settings → API)
+const SUPABASE_URL = "https://uklzdymjucqchmqzkusp.supabase.co";
+const SUPABASE_KEY = "sb_publishable_XpDcLabmx24ZihyonSWQIw_6vjucISh";
+// ¡NUNCA pongas aquí la clave "secret"! Solo la "publishable".
+
+const SUPABASE_CONFIGURADO = !SUPABASE_URL.includes("TU-PROYECTO") && !SUPABASE_KEY.includes("PEGA_AQUI");
+const sb = (SUPABASE_CONFIGURADO && window.supabase)
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+  : null;
+
+function cliente() {
+  if (!sb) throw new Error("Falta configurar la URL y la clave de Supabase en common.js");
+  return sb;
+}
 
 // Única fuente de verdad de las categorías de la cartelera:
 // el admin las usa en el selector y el index en las tarjetas y el filtro.
@@ -20,7 +33,7 @@ function esc(v) {
   return String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-// "2026-11-15" -> "15 de Noviembre, 2026". Si es texto libre (datos viejos), lo deja igual.
+// "2026-11-15" -> "15 de Noviembre, 2026". Si es texto libre, lo deja igual.
 function formatFecha(f) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(f || "");
   if (!m) return f || "";
@@ -32,44 +45,70 @@ function hoyISO() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-const soloDigitos = v => String(v || "").replace(/\D/g, "");
+// ---------- Datos (todas devuelven una promesa y lanzan error si algo falla) ----------
 
-// Completa campos que falten (datos guardados con versiones anteriores)
-function normalizarDB(db) {
-  db = db || {};
-  return {
-    anuncios: (db.anuncios || []).map(a => ({
-      ...a,
-      categoria: CATEGORIAS[a.categoria] ? a.categoria : "informativo"
-    })),
-    beneficiarias: (db.beneficiarias || []).map(b => ({
-      ...b,
-      acudiente: b.acudiente || "No asignado",
-      telefono: b.telefono || "Sin registrar",
-      detalle: b.detalle || "Sin observaciones."
-    }))
-  };
+async function listarAnuncios() {
+  const { data, error } = await cliente().from("anuncios").select("*").order("id", { ascending: false });
+  if (error) throw error;
+  return data || [];
 }
 
-function obtenerDB() {
-  try {
-    return normalizarDB(JSON.parse(localStorage.getItem(DB_KEY)));
-  } catch (e) {
-    return normalizarDB(null);
-  }
+async function crearAnuncio(a) {
+  const { error } = await cliente().from("anuncios").insert(a);
+  if (error) throw error;
 }
 
-function guardarDB(data) {
-  localStorage.setItem(DB_KEY, JSON.stringify(data));
+async function eliminarAnuncioDB(id) {
+  const { error } = await cliente().from("anuncios").delete().eq("id", id);
+  if (error) throw error;
 }
 
-// Si todavía no hay datos guardados, arranca con data.json (o vacío si no se puede leer)
-async function asegurarDB() {
-  if (localStorage.getItem(DB_KEY)) return;
-  let inicial = { anuncios: [], beneficiarias: [] };
-  try {
-    const r = await fetch("data.json");
-    if (r.ok) inicial = await r.json();
-  } catch (e) { /* abierto sin servidor: arranca vacío */ }
-  guardarDB(normalizarDB(inicial));
+async function listarBeneficiarias() {
+  const { data, error } = await cliente().from("beneficiarias").select("*").order("nombre", { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
+async function crearBeneficiaria(b) {
+  const { error } = await cliente().from("beneficiarias").insert(b);
+  if (error) throw error;
+}
+
+async function actualizarBeneficiaria(documentoOriginal, b) {
+  const { error } = await cliente().from("beneficiarias").update(b).eq("documento", documentoOriginal);
+  if (error) throw error;
+}
+
+async function eliminarBeneficiariaDB(documento) {
+  const { error } = await cliente().from("beneficiarias").delete().eq("documento", documento);
+  if (error) throw error;
+}
+
+// Consulta pública: devuelve { nombre_corto, estado, detalle } o null si no existe
+async function consultarBeneficiaria(documento) {
+  const { data, error } = await cliente().rpc("consultar_beneficiaria", { p_documento: documento });
+  if (error) throw error;
+  return (data && data[0]) || null;
+}
+
+// ---------- Sesión de la administradora ----------
+
+async function obtenerSesion() {
+  const { data } = await cliente().auth.getSession();
+  return data.session;
+}
+
+async function iniciarSesion(correo, clave) {
+  const { error } = await cliente().auth.signInWithPassword({ email: correo, password: clave });
+  if (error) throw error;
+}
+
+async function cerrarSesion() {
+  await cliente().auth.signOut();
+}
+
+// true solo si la cuenta con sesión está en la lista de es_admin() de la base de datos
+async function cuentaEsAdmin() {
+  const { data, error } = await cliente().rpc("es_admin");
+  return !error && data === true;
 }
