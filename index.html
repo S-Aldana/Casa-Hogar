@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Web Casa Hogar - Fundación Servimos</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style/index.css">
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <header class="bg-[#4c0839] text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <img src="assets/logos/logo.jpg" alt="Logo Casa Hogar" class="w-10 h-10 rounded-full object-cover border-2 border-amber-300 shadow-sm">
+        <div>
+          <h1 class="text-xl font-bold tracking-tight">Casa Hogar</h1>
+          <p class="text-xs text-amber-300 font-medium">Fundación Servimos</p>
+        </div>
+      </div>
+      <nav class="flex items-center gap-6 text-sm font-medium">
+        <a href="#cartelera" class="nav-link hover:text-amber-300 transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="megaphone" class="w-4 h-4"></i> Cartelera
+        </a>
+        <a href="#conocenos" class="nav-link hover:text-amber-300 transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="video" class="w-4 h-4"></i> Conócenos
+        </a>
+        <a href="#consulta" class="nav-link hover:text-amber-300 transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="search" class="w-4 h-4"></i> Consultar
+        </a>
+        <a href="#como-ser-parte" class="nav-link hover:text-amber-300 transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="help-circle" class="w-4 h-4"></i> ¿Cómo ser parte?
+        </a>
+        <button type="button" id="btn-open-contacto" class="hover:text-amber-300 transition flex items-center gap-1.5 cursor-pointer bg-transparent border-none text-white font-medium text-sm">
+          <i data-lucide="map-pin" class="w-4 h-4"></i> Contacto
+        </button>
+        <a href="admin.html" class="bg-amber-400 text-black px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-amber-300 transition flex items-center gap-1.5">
+          <i data-lucide="lock" class="w-3.5 h-3.5"></i> Panel Admin
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-grow space-y-12">
+    <section class="relative min-h-[90vh] flex items-center bg-gray-900 text-white overflow-hidden pb-24 pt-16">
+      <div id="hero-slider" class="absolute inset-0 w-full h-full z-0">
+        <img src="assets/img/foto_cartelera1.png" alt="Casa Hogar 1" class="absolute inset-0 w-full h-full object-cover object-center opacity-100 slider-img">
+        <img src="assets/img/foto_cartelera2.png" alt="Casa Hogar 2" class="absolute inset-0 w-full h-full object-cover object-center opacity-0 slider-img">
+        <img src="assets/img/foto_cartelera3.png" alt="Casa Hogar 3" class="absolute inset-0 w-full h-full object-cover object-center opacity-0 slider-img">
+      </div>
+      
+      <div class="absolute inset-0 bg-gradient-to-r from-[#4c0839]/90 via-[#4c0839]/40 to-transparent z-1"></div>
+
+      <div class="relative max-w-7xl w-full mx-auto px-6 sm:px-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center z-10">
+        <div class="lg:col-span-8 text-left space-y-6">
+          <div class="inline-flex items-center gap-2 text-amber-300 text-xs font-bold uppercase tracking-widest drop-shadow">
+            <i data-lucide="heart" class="w-4 h-4 fill-amber-300"></i>
+            <span>Programa Institucional de la Fundación Servimos</span>
+          </div>
+
+          <div>
+            <img src="assets/img/casa_hogar_title.png" alt="Casa Hogar" class="h-20 sm:h-28 md:h-36 object-contain object-left drop-shadow-xl">
+          </div>
+
+          <div class="space-y-3">
+            <p class="text-base sm:text-lg font-medium text-amber-200 drop-shadow leading-snug">
+              Cuidar una niña es cuidar el futuro.
+            </p>
+            <p class="text-xs sm:text-sm text-gray-200 max-w-xl leading-relaxed drop-shadow">
+              Casa Hogar es un espacio que busca brindar amor y garantía de derechos a las niñas, con el objetivo de apoyar a sus mamás en este proceso formativo. Es un lugar en el cual brindamos, a través de diferentes rutinas, herramientas para la vida.
+            </p>
+          </div>
+
+          <div class="pt-2 flex flex-wrap items-center gap-4">
+            <a href="#como-ser-parte" class="nav-link bg-amber-400 hover:bg-amber-300 text-black px-6 py-3 rounded-xl font-bold text-sm transition shadow-lg flex items-center gap-2 cursor-pointer">
+              <i data-lucide="help-circle" class="w-4 h-4"></i> ¿Cómo ser parte?
+            </a>
+            <a href="#consulta" class="nav-link bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-medium text-sm transition border border-white/20 backdrop-blur-sm flex items-center gap-2 cursor-pointer">
+              <i data-lucide="search" class="w-4 h-4"></i> Consulta de Estadía
+            </a>
+          </div>
+
+          <div class="pt-6 border-t border-white/20 flex flex-wrap items-center gap-4">
+            <span class="text-xs font-semibold text-gray-200 uppercase tracking-wider">Síguenos y conócenos:</span>
+            <div class="flex items-center gap-3">
+              <a href="https://fundacionservimos.com/nosotros/" target="_blank" class="w-11 h-11 rounded-full bg-white/20 hover:bg-amber-400 hover:text-black text-white flex items-center justify-center transition-all duration-300 transform hover:scale-110 shadow-lg border border-white/40 backdrop-blur-md cursor-pointer group" title="Sitio Web">
+                <svg class="w-5 h-5 fill-current text-white group-hover:text-black transition-colors" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                </svg>
+              </a>
+              <a href="https://www.instagram.com/fundacionservimos/" target="_blank" class="w-11 h-11 rounded-full bg-white/20 hover:bg-amber-400 hover:text-black text-white flex items-center justify-center transition-all duration-300 transform hover:scale-110 shadow-lg border border-white/40 backdrop-blur-md cursor-pointer group" title="Instagram">
+                <svg class="w-5 h-5 fill-current text-white group-hover:text-black transition-colors" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+              <a href="https://www.facebook.com/profile.php?id=61577924453109" target="_blank" class="w-11 h-11 rounded-full bg-white/20 hover:bg-amber-400 hover:text-black text-white flex items-center justify-center transition-all duration-300 transform hover:scale-110 shadow-lg border border-white/40 backdrop-blur-md cursor-pointer group" title="Facebook">
+                <svg class="w-5 h-5 fill-current text-white group-hover:text-black transition-colors" viewBox="0 0 24 24">
+                  <path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="absolute bottom-[-15px] left-3 sm:left-8 z-15 pointer-events-none flex flex-col gap-2 opacity-90 rotate-[-12deg]">
+        <i data-lucide="heart" class="w-3 h-3 fill-[#4c0839] text-[#4c0839]"></i>
+        <i data-lucide="heart" class="w-4 h-4 fill-[#4c0839] text-[#4c0839]"></i>
+        <i data-lucide="heart" class="w-5 h-5 fill-[#4c0839] text-[#4c0839]"></i>
+        <i data-lucide="heart" class="w-6 h-6 fill-[#4c0839] text-[#4c0839]"></i>
+        <i data-lucide="heart" class="w-7 h-7 fill-[#4c0839] text-[#4c0839]"></i>
+      </div>
+
+      <div class="absolute bottom-[-15px] right-3 sm:right-8 z-15 pointer-events-none flex flex-col gap-2 opacity-90 rotate-[12deg]">
+        <i data-lucide="heart" class="w-3 h-3 fill-[#4c0839] text-[#4c0839]"></i>
+        <i data-lucide="heart" class="w-4 h-4 fill-[#4c0839] text-[#4c0839]"></i>
+        <i data-lucide="heart" class="w-5 h-5 fill-[#4c0839] text-[#4c0839]"></i>
+        <i data-lucide="heart" class="w-6 h-6 fill-[#4c0839] text-[#4c0839]"></i>
+        <i data-lucide="heart" class="w-7 h-7 fill-[#4c0839] text-[#4c0839]"></i>
+      </div>
+
+      <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-20 pointer-events-none">
+        <svg class="relative block w-full h-14 sm:h-24 text-gray-50" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M0,0 C150,90 350,-40 500,60 C650,160 900,10 1200,40 L1200,120 L0,120 Z" fill="currentColor"></path>
+        </svg>
+      </div>
+    </section>
+
+    <section id="cartelera" class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="space-y-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-gray-200 pb-4">
+          <div>
+            <div class="flex items-center gap-2 text-amber-600 text-xs font-bold uppercase tracking-wider">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span>
+              <span class="w-2.5 h-2.5 rotate-45 bg-[#4c0839] inline-block"></span>
+              <span>Avisos e Información</span>
+            </div>
+            <h2 class="text-3xl font-black text-[#4c0839] mt-1">Cartelera Digital</h2>
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-gray-500">Filtrar por categoría:</span>
+            <select id="filtro-categoria" class="text-xs bg-white border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#4c0839]"></select>
+          </div>
+        </div>
+
+        <div id="contenedor-anuncios" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <section id="conocenos" class="bg-white rounded-3xl border-3 border-[#4c0839] shadow-[12px_12px_0px_#4c0839] overflow-hidden max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[500px]">
+        <div class="lg:col-span-4 bg-[#4c0839] text-white p-8 sm:p-12 flex flex-col justify-center text-left relative overflow-hidden space-y-6">
+          <div class="space-y-3 relative z-10">
+            <span class="text-xs font-bold uppercase tracking-widest text-amber-300 block">
+              Vivencias y Acompañamiento
+            </span>
+            <h2 class="text-5xl sm:text-6xl font-black text-white tracking-tight leading-none">
+              Conóce a las niñas
+            </h2>
+            <p class="text-base text-gray-200 leading-relaxed font-light pt-2">
+              Conoce las actividades, talleres y experiencias de las niñas en la Casa Hogar.
+            </p>
+          </div>
+
+          <div class="pt-4 relative z-10 flex items-center gap-2 text-amber-300">
+            <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+            <i data-lucide="heart" class="w-6 h-6 fill-current text-amber-400"></i>
+            <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+          </div>
+        </div>
+
+        <div class="lg:col-span-8 p-6 sm:p-8 flex flex-col justify-between bg-white space-y-6">
+          <div id="carrusel-videos" class="flex gap-5 overflow-x-auto scroll-smooth pb-2 relative z-15 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
+              <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
+                <video src="assets/videos/video_casa_hogar1.mp4" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
+                <button type="button" class="btn-play-heart absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-all cursor-pointer">
+                  <div class="w-14 h-14 flex items-center justify-center drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition duration-300">
+                    <i data-lucide="heart" class="w-12 h-12 fill-[#4c0839] text-amber-400 stroke-[2.5]"></i>
+                  </div>
+                </button>
+              </div>
+              <div class="p-3 bg-white border-t border-gray-100 flex-grow">
+                <span class="text-[9px] font-bold text-amber-600 uppercase tracking-wider block">Actividades y Recreación</span>
+                <h3 class="text-gray-900 font-bold text-xs mt-0.5">Actividades Favoritas en Casa Hogar</h3>
+                <p class="text-[10px] text-gray-500 mt-0.5 leading-snug">Momentos preferidos después del colegio.</p>
+              </div>
+            </div>
+
+            <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
+              <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
+                <video src="assets/videos/video_casa_hogar2.mp4" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
+                <button type="button" class="btn-play-heart absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-all cursor-pointer">
+                  <div class="w-14 h-14 flex items-center justify-center drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition duration-300">
+                    <i data-lucide="heart" class="w-12 h-12 fill-[#4c0839] text-amber-400 stroke-[2.5]"></i>
+                  </div>
+                </button>
+              </div>
+              <div class="p-3 bg-white border-t border-gray-100 flex-grow">
+                <span class="text-[9px] font-bold text-amber-600 uppercase tracking-wider block">Música y Talento</span>
+                <h3 class="text-gray-900 font-bold text-xs mt-0.5">Grabación del Videoclip Musical</h3>
+                <p class="text-[10px] text-gray-500 mt-0.5 leading-snug">Proyecto musical participativo.</p>
+              </div>
+            </div>
+
+            <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
+              <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
+                <video src="assets/videos/video_casa_hogar3.mp4" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
+                <button type="button" class="btn-play-heart absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-all cursor-pointer">
+                  <div class="w-14 h-14 flex items-center justify-center drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition duration-300">
+                    <i data-lucide="heart" class="w-12 h-12 fill-[#4c0839] text-amber-400 stroke-[2.5]"></i>
+                  </div>
+                </button>
+              </div>
+              <div class="p-3 bg-white border-t border-gray-100 flex-grow">
+                <span class="text-[9px] font-bold text-amber-600 uppercase tracking-wider block">Rutina Diaria</span>
+                <h3 class="text-gray-900 font-bold text-xs mt-0.5">El Día a Día en Casa Hogar</h3>
+                <p class="text-[10px] text-gray-500 mt-0.5 leading-snug">Jornadas de estudio y convivencia.</p>
+              </div>
+            </div>
+
+            <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
+              <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
+                <video src="assets/videos/video_casa_hogar4.mp4" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
+                <button type="button" class="btn-play-heart absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-all cursor-pointer">
+                  <div class="w-14 h-14 flex items-center justify-center drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition duration-300">
+                    <i data-lucide="heart" class="w-12 h-12 fill-[#4c0839] text-amber-400 stroke-[2.5]"></i>
+                  </div>
+                </button>
+              </div>
+              <div class="p-3 bg-white border-t border-gray-100 flex-grow">
+                <span class="text-[9px] font-bold text-amber-600 uppercase tracking-wider block">Formación Artística</span>
+                <h3 class="text-gray-900 font-bold text-xs mt-0.5">Ensayos Musicales e Ilusión</h3>
+                <p class="text-[10px] text-gray-500 mt-0.5 leading-snug">Preparación para presentaciones.</p>
+              </div>
+            </div>
+
+            <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
+              <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
+                <video src="assets/videos/video_casa_hogar5.mp4" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
+                <button type="button" class="btn-play-heart absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-all cursor-pointer">
+                  <div class="w-14 h-14 flex items-center justify-center drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition duration-300">
+                    <i data-lucide="heart" class="w-12 h-12 fill-[#4c0839] text-amber-400 stroke-[2.5]"></i>
+                  </div>
+                </button>
+              </div>
+              <div class="p-3 bg-white border-t border-gray-100 flex-grow">
+                <span class="text-[9px] font-bold text-amber-600 uppercase tracking-wider block">Participación</span>
+                <h3 class="text-gray-900 font-bold text-xs mt-0.5">Comparsa y Expresión Creativa</h3>
+                <p class="text-[10px] text-gray-500 mt-0.5 leading-snug">Integración institucional.</p>
+              </div>
+            </div>
+
+            <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
+              <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
+                <video src="assets/videos/video_casa_hogar6.mp4" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
+                <button type="button" class="btn-play-heart absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-all cursor-pointer">
+                  <div class="w-14 h-14 flex items-center justify-center drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition duration-300">
+                    <i data-lucide="heart" class="w-12 h-12 fill-[#4c0839] text-amber-400 stroke-[2.5]"></i>
+                  </div>
+                </button>
+              </div>
+              <div class="p-3 bg-white border-t border-gray-100 flex-grow">
+                <span class="text-[9px] font-bold text-amber-600 uppercase tracking-wider block">Talleres Familiares</span>
+                <h3 class="text-gray-900 font-bold text-xs mt-0.5">Taller de Corresponsabilidad</h3>
+                <p class="text-[10px] text-gray-500 mt-0.5 leading-snug">Encuentros de reflexión.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center justify-center gap-3">
+            <button type="button" class="btn-heart-paginator p-1 transition-all duration-300 cursor-pointer text-[#4c0839] scale-125" data-index="0" title="Ver grupo 1">
+              <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+            </button>
+            <div class="h-0.5 w-6 bg-[#4c0839]/30 rounded-full"></div>
+
+            <button type="button" class="btn-heart-paginator p-1 transition-all duration-300 cursor-pointer text-[#4c0839]/30 hover:text-[#4c0839]" data-index="1" title="Ver grupo 2">
+              <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+            </button>
+            <div class="h-0.5 w-6 bg-[#4c0839]/30 rounded-full"></div>
+
+            <button type="button" class="btn-heart-paginator p-1 transition-all duration-300 cursor-pointer text-[#4c0839]/30 hover:text-[#4c0839]" data-index="2" title="Ver grupo 3">
+              <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+            </button>
+            <div class="h-0.5 w-6 bg-[#4c0839]/30 rounded-full"></div>
+
+            <button type="button" class="btn-heart-paginator p-1 transition-all duration-300 cursor-pointer text-[#4c0839]/30 hover:text-[#4c0839]" data-index="3" title="Ver grupo 4">
+              <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="consulta" class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="bg-white rounded-3xl border-3 border-[#4c0839] shadow-[12px_12px_0px_#4c0839] p-8 sm:p-12 relative overflow-hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-5 space-y-4">
+            <div class="inline-flex items-center gap-2 text-amber-600 bg-amber-50 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider border border-amber-200">
+              <i data-lucide="user-check" class="w-4 h-4"></i>
+              <span>¿Ya eres parte?</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-[#4c0839] tracking-tight">
+              Motor de Consulta de Beneficiarias
+            </h2>
+            <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+              Ingresa el número de documento registrado para consultar el estado de estadía, informes o certificado activo en el programa.
+            </p>
+          </div>
+
+          <div class="lg:col-span-7 bg-gray-50 p-6 rounded-2xl border border-gray-200 space-y-4">
+            <form id="form-consulta" class="flex flex-col sm:flex-row gap-3">
+              <div class="relative flex-grow">
+                <i data-lucide="id-card" class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="input-documento" placeholder="Número de documento de la niña..." class="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-[#4c0839] focus:outline-none text-sm font-medium transition text-gray-800 bg-white" required>
+              </div>
+              <button type="submit" class="bg-[#4c0839] hover:bg-[#3b062c] text-white px-8 py-3.5 rounded-xl font-bold text-sm transition shadow-md flex items-center justify-center gap-2 cursor-pointer shrink-0">
+                <i data-lucide="search" class="w-4 h-4"></i>
+                <span>Consultar</span>
+              </button>
+            </form>
+            <div id="resultado-consulta" class="hidden p-4 rounded-xl text-xs font-medium border"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="como-ser-parte" class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="text-center space-y-3 mb-10">
+        <span class="text-xs font-bold uppercase tracking-widest text-amber-600">
+          Proceso de Ingreso
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-black text-[#4c0839] tracking-tight">
+          ¿Cómo ser parte?
+        </h2>
+        <p class="text-xs sm:text-sm text-gray-500 max-w-lg mx-auto">
+          Conoce los pasos detallados para unirte a nuestro programa de formación y acompañamiento en la Casa Hogar.
+        </p>
+      </div>
+
+      <div class="space-y-4" id="accordion-pasos">
+        <div class="border-b border-gray-200 pb-4">
+          <button type="button" class="accordion-btn w-full flex items-center justify-between py-3 text-left font-bold text-base sm:text-lg text-gray-800 hover:text-[#4c0839] transition cursor-pointer">
+            <span class="flex items-center gap-3">
+              <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">Paso 1</span>
+              Solicitud Inicial e Inscripción
+            </span>
+            <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 transition-transform duration-300"></i>
+          </button>
+          <div class="accordion-content hidden pt-2 pb-4 text-xs sm:text-sm text-gray-600 leading-relaxed pl-16">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.
+          </div>
+        </div>
+
+        <div class="border-b border-gray-200 pb-4">
+          <button type="button" class="accordion-btn w-full flex items-center justify-between py-3 text-left font-bold text-base sm:text-lg text-gray-800 hover:text-[#4c0839] transition cursor-pointer">
+            <span class="flex items-center gap-3">
+              <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">Paso 2</span>
+              Entrevista y Valoración Integral
+            </span>
+            <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 transition-transform duration-300"></i>
+          </button>
+          <div class="accordion-content hidden pt-2 pb-4 text-xs sm:text-sm text-gray-600 leading-relaxed pl-16">
+            Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent.
+          </div>
+        </div>
+
+        <div class="border-b border-gray-200 pb-4">
+          <button type="button" class="accordion-btn w-full flex items-center justify-between py-3 text-left font-bold text-base sm:text-lg text-gray-800 hover:text-[#4c0839] transition cursor-pointer">
+            <span class="flex items-center gap-3">
+              <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">Paso 3</span>
+              Validación de Requisitos y Cupos
+            </span>
+            <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 transition-transform duration-300"></i>
+          </button>
+          <div class="accordion-content hidden pt-2 pb-4 text-xs sm:text-sm text-gray-600 leading-relaxed pl-16">
+            Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis.
+          </div>
+        </div>
+
+        <div class="border-b border-gray-200 pb-4">
+          <button type="button" class="accordion-btn w-full flex items-center justify-between py-3 text-left font-bold text-base sm:text-lg text-gray-800 hover:text-[#4c0839] transition cursor-pointer">
+            <span class="flex items-center gap-3">
+              <span class="text-xs font-extrabold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">Paso 4</span>
+              Bienvenida y Asignación de Rutinas
+            </span>
+            <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 transition-transform duration-300"></i>
+          </button>
+          <div class="accordion-content hidden pt-2 pb-4 text-xs sm:text-sm text-gray-600 leading-relaxed pl-16">
+            Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet.
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-10 space-y-2">
+        <p class="text-xs text-gray-500">¿Tienes dudas sobre el proceso?</p>
+        <button type="button" id="btn-open-contacto-pasos" class="inline-flex items-center gap-2 text-xs font-bold text-[#4c0839] hover:underline cursor-pointer">
+          <span>Escríbenos y te orientamos con gusto</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 mb-16">
+      <div class="bg-gray-100 border border-gray-200 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="p-3 bg-white rounded-xl border border-gray-200 text-[#4c0839]">
+            <i data-lucide="phone-call" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm">¿Dudas sobre permisos o estadía?</h3>
+            <p class="text-xs text-gray-600">Comuníquese directamente con la administración de la Casa Hogar.</p>
+          </div>
+        </div>
+        <button id="btn-abrir-modal" type="button" class="bg-[#4c0839] hover:bg-[#340527] text-white font-medium text-xs px-5 py-3 rounded-xl transition shadow-sm flex items-center gap-2 whitespace-nowrap cursor-pointer">
+          <i data-lucide="message-square" class="w-4 h-4"></i>
+          <span>Contactar Dirección</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <div id="modal-contacto" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-gray-200 relative">
+      <div class="bg-[#4c0839] text-white p-6 relative">
+        <button id="btn-cerrar-modal" type="button" class="absolute top-5 right-5 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-1.5 rounded-xl transition cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <h3 class="font-bold text-xl tracking-tight text-white">Información de Contacto</h3>
+        <p class="text-xs text-amber-300 mt-1 font-medium">Canales oficiales de atención e instalaciones de la Casa Hogar.</p>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div class="flex items-start gap-3.5 bg-gray-50 p-4 rounded-xl border border-gray-200">
+          <div class="p-2.5 bg-[#4c0839]/10 text-[#4c0839] rounded-xl flex-shrink-0">
+            <i data-lucide="map-pin" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="text-[11px] font-bold text-[#4c0839] uppercase tracking-wider block">Dirección Física</span>
+            <p class="text-xs text-gray-700 font-medium mt-0.5">Lorem ipsum dolor sit amet, consectetur adipiscing elit 123 - 45, Bogotá D.C.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3.5 bg-gray-50 p-4 rounded-xl border border-gray-200">
+          <div class="p-2.5 bg-[#4c0839]/10 text-[#4c0839] rounded-xl flex-shrink-0">
+            <i data-lucide="clock" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="text-[11px] font-bold text-[#4c0839] uppercase tracking-wider block">Horarios de Atención</span>
+            <p class="text-xs text-gray-700 font-medium mt-0.5">Lunes a Viernes: 8:00 AM – 5:00 PM</p>
+            <p class="text-[11px] text-gray-500">Sábados: 9:00 AM – 1:00 PM</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="flex items-start gap-3 bg-gray-50 p-3.5 rounded-xl border border-gray-200">
+            <div class="p-2 bg-[#4c0839]/10 text-[#4c0839] rounded-lg flex-shrink-0">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+            </div>
+            <div class="overflow-hidden">
+              <span class="text-[10px] font-bold text-[#4c0839] uppercase tracking-wider block">Correo</span>
+              <p class="text-xs text-gray-700 font-medium truncate">contacto@fundacionservimos.com</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 bg-gray-50 p-3.5 rounded-xl border border-gray-200">
+            <div class="p-2 bg-[#4c0839]/10 text-[#4c0839] rounded-lg flex-shrink-0">
+              <i data-lucide="phone" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <span class="text-[10px] font-bold text-[#4c0839] uppercase tracking-wider block">Teléfono</span>
+              <p class="text-xs text-gray-700 font-medium">+57 (300) 000-0000</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 flex flex-col sm:flex-row gap-2.5">
+          <a href="https://wa.me/" target="_blank" class="flex-1 bg-[#4c0839] hover:bg-[#340527] text-white font-medium text-xs py-3 px-4 rounded-xl transition shadow-sm flex items-center justify-center gap-2 text-center">
+            <i data-lucide="message-square" class="w-4 h-4 text-amber-300"></i>
+            <span>Iniciar Chat en WhatsApp</span>
+          </a>
+          <button id="btn-cerrar-footer" type="button" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-xs py-3 px-5 rounded-xl transition cursor-pointer">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-gray-900 text-gray-400 py-6 text-center text-xs space-y-1">
+    <p class="font-medium text-gray-300">&copy; 2026 Casa Hogar — Fundación Servimos. Todos los derechos reservados.</p>
+    <p>Desarrollado por Sara Aldana | Escuela Tecnológica Instituto Técnico Central</p>
+  </footer>
+
+  <script src="common.js"></script>
+  <script src="portal.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+
+      const sliderImages = document.querySelectorAll("#hero-slider .slider-img");
+      if (sliderImages.length > 0) {
+        let currentIndex = 0;
+        setInterval(() => {
+          sliderImages[currentIndex].classList.remove("opacity-100");
+          sliderImages[currentIndex].classList.add("opacity-0");
+          currentIndex = (currentIndex + 1) % sliderImages.length;
+          sliderImages[currentIndex].classList.remove("opacity-0");
+          sliderImages[currentIndex].classList.add("opacity-100");
+        }, 3000);
+      }
+
+      const modalContacto = document.getElementById("modal-contacto");
+      const btnOpenContacto = document.getElementById("btn-open-contacto");
+      const btnAbrirModal = document.getElementById("btn-abrir-modal");
+      const btnOpenPasos = document.getElementById("btn-open-contacto-pasos");
+      const btnCerrarModal = document.getElementById("btn-cerrar-modal");
+      const btnCerrarFooter = document.getElementById("btn-cerrar-footer");
+
+      const abrirModal = () => modalContacto && modalContacto.classList.remove("hidden");
+      const cerrarModal = () => modalContacto && modalContacto.classList.add("hidden");
+
+      if (btnOpenContacto) btnOpenContacto.addEventListener("click", abrirModal);
+      if (btnAbrirModal) btnAbrirModal.addEventListener("click", abrirModal);
+      if (btnOpenPasos) btnOpenPasos.addEventListener("click", abrirModal);
+
+      if (btnCerrarModal) btnCerrarModal.addEventListener("click", cerrarModal);
+      if (btnCerrarFooter) btnCerrarFooter.addEventListener("click", cerrarModal);
+      
+      if (modalContacto) {
+        modalContacto.addEventListener("click", (e) => {
+          if (e.target === modalContacto) cerrarModal();
+        });
+      }
+
+      const videoWrappers = document.querySelectorAll(".wrapper-video");
+      videoWrappers.forEach(wrapper => {
+        const video = wrapper.querySelector("video");
+        const playBtn = wrapper.querySelector(".btn-play-heart");
+
+        wrapper.addEventListener("click", () => {
+          document.querySelectorAll(".wrapper-video video").forEach(v => {
+            if (v !== video && !v.paused) {
+              v.pause();
+              v.nextElementSibling.classList.remove("opacity-0", "pointer-events-none");
+            }
+          });
+
+          if (video.paused) {
+            video.play();
+            playBtn.classList.add("opacity-0", "pointer-events-none");
+          } else {
+            video.pause();
+            playBtn.classList.remove("opacity-0", "pointer-events-none");
+          }
+        });
+      });
+
+      const carrusel = document.getElementById("carrusel-videos");
+      const botonesCorazon = document.querySelectorAll(".btn-heart-paginator");
+
+      if (carrusel && botonesCorazon.length > 0) {
+        botonesCorazon.forEach((btn, index) => {
+          btn.addEventListener("click", () => {
+            const maxScroll = carrusel.scrollWidth - carrusel.clientWidth;
+            const targetScroll = (maxScroll / (botonesCorazon.length - 1)) * index;
+            carrusel.scrollTo({ left: targetScroll, behavior: "smooth" });
+            actualizarCorazones(index);
+          });
+        });
+
+        carrusel.addEventListener("scroll", () => {
+          const maxScroll = carrusel.scrollWidth - carrusel.clientWidth;
+          if (maxScroll <= 0) return;
+          const porcentaje = carrusel.scrollLeft / maxScroll;
+          let indexActual = Math.round(porcentaje * (botonesCorazon.length - 1));
+          actualizarCorazones(indexActual);
+        });
+      }
+
+      function actualizarCorazones(indexActivo) {
+        botonesCorazon.forEach((b, i) => {
+          const icono = b.querySelector("svg") || b.querySelector("i");
+          if (i === indexActivo) {
+            b.classList.remove("text-[#4c0839]/30");
+            b.classList.add("text-[#4c0839]", "scale-125");
+            if (icono) icono.classList.add("w-4", "h-4");
+          } else {
+            b.classList.remove("text-[#4c0839]", "scale-125");
+            b.classList.add("text-[#4c0839]/30");
+            if (icono) icono.classList.add("w-4", "h-4");
+          }
+        });
+      }
+
+      const accordionBtns = document.querySelectorAll(".accordion-btn");
+      accordionBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const content = btn.nextElementSibling;
+          const icon = btn.querySelector("i");
+          content.classList.toggle("hidden");
+          if (content.classList.contains("hidden")) {
+            icon.style.transform = "rotate(0deg)";
+          } else {
+            icon.style.transform = "rotate(180deg)";
+          }
+        });
+      });
+
+      function smoothScrollTo(targetPosition, duration = 700) {
+        const startPosition = window.pageYOffset;
+        const distance = targetPosition - startPosition;
+        let startTime = null;
+
+        function animation(currentTime) {
+          if (startTime === null) startTime = currentTime;
+          const timeElapsed = currentTime - startTime;
+          const progress = Math.min(timeElapsed / duration, 1);
+          const ease = progress < 0.5
+            ? 4 * progress * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+          window.scrollTo(0, startPosition + (distance * ease));
+
+          if (timeElapsed < duration) {
+            requestAnimationFrame(animation);
+          }
+        }
+        requestAnimationFrame(animation);
+      }
+
+      const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+      navLinks.forEach(link => {
+        link.addEventListener("click", function (e) {
+          const targetId = this.getAttribute("href");
+          if (!targetId || targetId === "#") return;
+
+          const targetSection = document.querySelector(targetId);
+          if (targetSection) {
+            e.preventDefault();
+            const windowHeight = window.innerHeight;
+            const sectionHeight = targetSection.offsetHeight;
+            const navbar = document.querySelector("header");
+            const navbarHeight = navbar ? navbar.offsetHeight : 80;
+
+            const elementRect = targetSection.getBoundingClientRect();
+            const absoluteElementTop = elementRect.top + window.pageYOffset;
+
+            let centeredPosition;
+            if (sectionHeight < windowHeight) {
+              centeredPosition = absoluteElementTop - ((windowHeight - sectionHeight) / 2) + (navbarHeight / 2);
+            } else {
+              centeredPosition = absoluteElementTop - navbarHeight - 20;
+            }
+
+            smoothScrollTo(centeredPosition > 0 ? centeredPosition : 0, 700);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

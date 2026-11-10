@@ -1,0 +1,32 @@
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  background-color: #f9fafb;
+  color: #111827;
+  font-family: system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.slider-img {
+  transition: opacity 1s ease-in-out;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4c0839;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3b062c;
+}

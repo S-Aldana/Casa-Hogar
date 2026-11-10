@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Administrativo - Casa Hogar</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+
+  <!-- ENCABEZADO ADMIN -->
+  <header class="bg-[#4c0839] text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <img src="assets/logos/logo.jpg" alt="Logo" class="w-9 h-9 rounded-full object-cover border-2 border-amber-300">
+        <div>
+          <h1 class="text-lg font-bold tracking-tight">Panel de Administración</h1>
+          <p class="text-xs text-amber-300">Gestión integral de beneficiarias y cartelera de anuncios</p>
+        </div>
+      </div>
+      <a href="index.html" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-medium transition flex items-center gap-2">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al Sitio Público
+      </a>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL ADMIN -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-8 space-y-10">
+    
+    <!-- GRID SUPERIOR: BENEFICIARIAS Y CARTELERA -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- 1. GESTIÓN DE BENEFICIARIAS (CREAR / EDITAR) -->
+      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+        <div class="border-l-4 border-[#4c0839] pl-4 flex justify-between items-center">
+          <div>
+            <h2 id="form-titulo" class="text-lg font-bold text-[#4c0839]">Registrar Beneficiaria</h2>
+            <p id="form-subtitulo" class="text-xs text-gray-500">Añada o modifique una residente</p>
+          </div>
+          <button id="btn-cancelar-edicion" type="button" class="hidden text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-lg transition font-medium cursor-pointer">
+            Cancelar
+          </button>
+        </div>
+
+        <form id="form-beneficiaria" class="space-y-3" onsubmit="event.preventDefault();">
+          <input type="hidden" id="edit-doc-original" value="">
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Nombre Completo</label>
+              <input type="text" id="reg-nombre" required placeholder="Ej. Valentina Gómez" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Documento</label>
+              <input type="text" id="reg-documento" required placeholder="Ej. 1098765432" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Acudiente</label>
+              <input type="text" id="reg-acudiente" placeholder="Ej. María Aldana" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Teléfono</label>
+              <input type="text" id="reg-telefono" placeholder="Ej. 3001234567" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Estado</label>
+              <select id="reg-estado" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+                <option value="En estadía">En estadía</option>
+                <option value="Con permiso">Con permiso</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Detalle / Retorno</label>
+              <input type="text" id="reg-detalle" placeholder="Ej. Retorno el 20 Nov" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+            </div>
+          </div>
+
+          <button type="button" id="btn-guardar-nina" class="w-full bg-[#4c0839] hover:bg-[#340527] text-white py-2.5 rounded-xl text-sm font-medium transition shadow-sm cursor-pointer flex items-center justify-center gap-2 mt-2">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            <span id="btn-texto-accion">Guardar Beneficiaria</span>
+          </button>
+          <p id="msg-reg-nina" class="text-xs text-center font-semibold text-emerald-600 hidden">¡Operación exitosa en beneficiarias!</p>
+        </form>
+      </section>
+
+      <!-- 2. PUBLICAR NUEVO ANUNCIO EN CARTELERA -->
+      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+        <div class="border-l-4 border-amber-400 pl-4">
+          <h2 class="text-lg font-bold text-[#4c0839]">Publicar Anuncio en Cartelera</h2>
+          <p class="text-xs text-gray-500">Cree comunicados visibles en el portal público</p>
+        </div>
+
+        <form id="form-anuncio" class="space-y-3" onsubmit="event.preventDefault();">
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Título del Aviso</label>
+            <input type="text" id="input-titulo" required placeholder="Ej. Reunión General de Acudientes" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Categoría</label>
+              <select id="select-categoria" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]"></select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Fecha Visible</label>
+              <input type="date" id="input-fecha" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Contenido del Comunicado</label>
+            <textarea id="input-contenido" rows="2" required placeholder="Detalle completo del aviso..." class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]"></textarea>
+          </div>
+
+          <button type="button" id="btn-publicar" class="w-full bg-amber-500 hover:bg-amber-600 text-black py-2.5 rounded-xl text-sm font-bold transition shadow-sm cursor-pointer flex items-center justify-center gap-2 mt-2">
+            <i data-lucide="megaphone" class="w-4 h-4"></i>
+            <span>Publicar Anuncio</span>
+          </button>
+          <p id="mensaje-anuncio" class="text-xs text-center font-semibold text-emerald-600 hidden">¡Anuncio publicado en la cartelera con éxito!</p>
+        </form>
+      </section>
+
+    </div>
+
+    <!-- SECCIÓN INFERIOR: TABLAS DE CONTROL (BENEFICIARIAS Y ANUNCIOS) -->
+    <div class="grid grid-cols-1 gap-8">
+      
+      <!-- Tabla Beneficiarias -->
+      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+        <div class="border-l-4 border-[#4c0839] pl-4 flex justify-between items-center">
+          <div>
+            <h2 class="text-lg font-bold text-[#4c0839]">Directorio de Beneficiarias</h2>
+            <p class="text-xs text-gray-500">Gestión de residentes activas</p>
+          </div>
+          <span class="text-xs bg-gray-100 text-gray-700 font-semibold px-3 py-1 rounded-full" id="contador-niñas">0 registradas</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-gray-50 text-gray-700 border-b text-xs uppercase tracking-wider">
+                <th class="p-3 font-semibold">Documento</th>
+                <th class="p-3 font-semibold">Nombre</th>
+                <th class="p-3 font-semibold">Acudiente y Teléfono</th>
+                <th class="p-3 font-semibold">Estado</th>
+                <th class="p-3 font-semibold">Detalle</th>
+                <th class="p-3 font-semibold text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-beneficiarias" class="divide-y divide-gray-100 text-xs"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tabla Anuncios (Cartelera) -->
+      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+        <div class="border-l-4 border-amber-400 pl-4 flex justify-between items-center">
+          <div>
+            <h2 class="text-lg font-bold text-[#4c0839]">Anuncios Actuales en Cartelera</h2>
+            <p class="text-xs text-gray-500">Comunicados visibles en el portal web</p>
+          </div>
+          <span class="text-xs bg-amber-100 text-amber-800 font-semibold px-3 py-1 rounded-full" id="contador-anuncios">0 activos</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-gray-50 text-gray-700 border-b text-xs uppercase tracking-wider">
+                <th class="p-3 font-semibold">Fecha</th>
+                <th class="p-3 font-semibold">Categoría</th>
+                <th class="p-3 font-semibold">Título del Aviso</th>
+                <th class="p-3 font-semibold">Contenido</th>
+                <th class="p-3 font-semibold text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-anuncios" class="divide-y divide-gray-100 text-xs"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer class="bg-gray-900 text-gray-400 py-6 text-center text-xs">
+    <p>Módulo de Administración Interna — Casa Hogar</p>
+  </footer>
+
+  <script src="common.js"></script>
+
+  <!-- SCRIPT INTEGRAL (BENEFICIARIAS Y CARTELERA) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Opciones de categoría desde common.js (mismas que usa el index)
+      document.getElementById("select-categoria").innerHTML =
+        Object.entries(CATEGORIAS).map(([k, c]) => `<option value="${k}">${c.label}</option>`).join("");
+      await asegurarDB();
+      cargarVistaAdmin();
+    });
+
+    function cargarVistaAdmin() {
+      const data = obtenerDB();
+      renderTablas(data);
+
+      // 1. Guardar o Actualizar Beneficiaria
+      const btnReg = document.getElementById("btn-guardar-nina");
+      const btnCancelar = document.getElementById("btn-cancelar-edicion");
+      const editDocOriginal = document.getElementById("edit-doc-original");
+
+      btnReg.onclick = function() {
+        const nombre = document.getElementById("reg-nombre").value.trim();
+        const documento = document.getElementById("reg-documento").value.trim();
+        const acudiente = document.getElementById("reg-acudiente").value.trim();
+        const telefono = document.getElementById("reg-telefono").value.trim();
+        const estado = document.getElementById("reg-estado").value;
+        const detalle = document.getElementById("reg-detalle").value.trim();
+
+        if (!nombre || !documento) {
+          alert("Por favor, ingrese el nombre y el número de documento.");
+          return;
+        }
+
+        const dbActual = obtenerDB();
+        const docOriginal = editDocOriginal.value;
+
+        if (docOriginal === "") {
+          if (dbActual.beneficiarias.some(b => b.documento === documento)) {
+            alert("Ya existe una beneficiaria registrada con este número de documento.");
+            return;
+          }
+          dbActual.beneficiarias.push({
+            documento, nombre, acudiente: acudiente || "No asignado", telefono: telefono || "Sin registrar", estado, detalle: detalle || "Sin observaciones."
+          });
+        } else {
+          if (documento !== docOriginal && dbActual.beneficiarias.some(b => b.documento === documento)) {
+            alert("Ya existe otra beneficiaria con ese número de documento.");
+            return;
+          }
+          const index = dbActual.beneficiarias.findIndex(b => b.documento === docOriginal);
+          if (index !== -1) {
+            dbActual.beneficiarias[index] = {
+              documento, nombre, acudiente: acudiente || "No asignado", telefono: telefono || "Sin registrar", estado, detalle: detalle || "Sin observaciones."
+            };
+          }
+          limpiarFormBeneficiaria();
+        }
+
+        guardarDB(dbActual);
+        limpiarFormBeneficiaria();
+        renderTablas(dbActual);
+
+        const msg = document.getElementById("msg-reg-nina");
+        msg.classList.remove("hidden");
+        setTimeout(() => msg.classList.add("hidden"), 3000);
+      };
+
+      btnCancelar.onclick = limpiarFormBeneficiaria;
+
+      // 2. Publicar Anuncio en Cartelera
+      const btnPub = document.getElementById("btn-publicar");
+      btnPub.onclick = function() {
+        const titulo = document.getElementById("input-titulo").value.trim();
+        const categoria = document.getElementById("select-categoria").value;
+        const fecha = document.getElementById("input-fecha").value;
+        const contenido = document.getElementById("input-contenido").value.trim();
+
+        if (!titulo || !contenido) {
+          alert("Por favor, complete el título y el contenido del anuncio.");
+          return;
+        }
+
+        const dbActual = obtenerDB();
+        dbActual.anuncios.unshift({
+          id: Date.now(),
+          titulo,
+          categoria,
+          fecha: fecha || hoyISO(),
+          contenido
+        });
+
+        guardarDB(dbActual);
+
+        document.getElementById("input-titulo").value = "";
+        document.getElementById("input-fecha").value = "";
+        document.getElementById("input-contenido").value = "";
+
+        renderTablas(dbActual);
+
+        const msg = document.getElementById("mensaje-anuncio");
+        msg.classList.remove("hidden");
+        setTimeout(() => msg.classList.add("hidden"), 3000);
+      };
+    }
+
+    function limpiarFormBeneficiaria() {
+      document.getElementById("reg-nombre").value = "";
+      document.getElementById("reg-documento").value = "";
+      document.getElementById("reg-acudiente").value = "";
+      document.getElementById("reg-telefono").value = "";
+      document.getElementById("reg-estado").value = "En estadía";
+      document.getElementById("reg-detalle").value = "";
+      document.getElementById("edit-doc-original").value = "";
+
+      document.getElementById("form-titulo").innerText = "Registrar Beneficiaria";
+      document.getElementById("form-subtitulo").innerText = "Añada o modifique una residente";
+      document.getElementById("btn-texto-accion").innerText = "Guardar Beneficiaria";
+      document.getElementById("btn-cancelar-edicion").classList.add("hidden");
+    }
+
+    function renderTablas(data) {
+      // Renderizar Beneficiarias
+      const tbodyNinas = document.getElementById("tabla-beneficiarias");
+      document.getElementById("contador-niñas").innerText = `${data.beneficiarias.length} registradas`;
+
+      if (data.beneficiarias.length === 0) {
+        tbodyNinas.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-400">No hay beneficiarias registradas.</td></tr>`;
+      } else {
+        tbodyNinas.innerHTML = data.beneficiarias.map(b => {
+          const esPermiso = b.estado === "Con permiso";
+          const badgeColor = esPermiso ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800";
+          return `
+            <tr class="hover:bg-gray-50 transition">
+              <td class="p-3 font-medium text-gray-900">${esc(b.documento)}</td>
+              <td class="p-3 text-gray-700 font-semibold">${esc(b.nombre)}</td>
+              <td class="p-3 text-gray-600">
+                <span class="block text-gray-900 font-medium">${esc(b.acudiente || "No asignado")}</span>
+                <span class="text-[11px] text-gray-500">${esc(b.telefono || "Sin registrar")}</span>
+              </td>
+              <td class="p-3"><span class="px-2.5 py-0.5 rounded-full font-bold text-[10px] ${badgeColor}">${esc(b.estado)}</span></td>
+              <td class="p-3 text-gray-600 truncate max-w-xs">${esc(b.detalle)}</td>
+              <td class="p-3 text-center space-x-2 whitespace-nowrap">
+                <button onclick="cargarParaModificar('${esc(b.documento)}')" class="bg-[#4c0839]/10 hover:bg-[#4c0839]/20 text-[#4c0839] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer">Modificar</button>
+                <button onclick="eliminarBeneficiaria('${esc(b.documento)}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded-lg transition font-medium cursor-pointer">Eliminar</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Renderizar Anuncios en Cartelera
+      const tbodyAnuncios = document.getElementById("tabla-anuncios");
+      document.getElementById("contador-anuncios").innerText = `${data.anuncios.length} activos`;
+
+      if (data.anuncios.length === 0) {
+        tbodyAnuncios.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">No hay anuncios activos en la cartelera.</td></tr>`;
+      } else {
+        tbodyAnuncios.innerHTML = data.anuncios.map(a => {
+          const cat = CATEGORIAS[a.categoria] || CATEGORIAS.informativo;
+          return `
+            <tr class="hover:bg-gray-50 transition">
+              <td class="p-3 text-gray-500 font-medium whitespace-nowrap">${esc(formatFecha(a.fecha))}</td>
+              <td class="p-3"><span class="px-2.5 py-0.5 rounded-full font-bold text-[10px] ${cat.badge}">${cat.label.toUpperCase()}</span></td>
+              <td class="p-3 font-bold text-gray-800">${esc(a.titulo)}</td>
+              <td class="p-3 text-gray-600 truncate max-w-sm">${esc(a.contenido)}</td>
+              <td class="p-3 text-center">
+                <button onclick="eliminarAnuncio(${a.id})" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded-lg transition font-medium cursor-pointer">Eliminar</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // Funciones Globales CRUD Anuncios y Niñas
+    window.cargarParaModificar = function(documento) {
+      const data = obtenerDB();
+      const nina = data.beneficiarias.find(b => b.documento === documento);
+      if (!nina) return;
+
+      document.getElementById("reg-nombre").value = nina.nombre;
+      document.getElementById("reg-documento").value = nina.documento;
+      document.getElementById("reg-acudiente").value = nina.acudiente === "No asignado" ? "" : (nina.acudiente || "");
+      document.getElementById("reg-telefono").value = nina.telefono === "Sin registrar" ? "" : (nina.telefono || "");
+      document.getElementById("reg-estado").value = nina.estado;
+      document.getElementById("reg-detalle").value = nina.detalle === "Sin observaciones." ? "" : (nina.detalle || "");
+      document.getElementById("edit-doc-original").value = nina.documento;
+
+      document.getElementById("form-titulo").innerText = "Modificar Beneficiaria";
+      document.getElementById("form-subtitulo").innerText = `Editando a: ${nina.nombre}`;
+      document.getElementById("btn-texto-accion").innerText = "Actualizar Datos";
+      document.getElementById("btn-cancelar-edicion").classList.remove("hidden");
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.eliminarBeneficiaria = function(documento) {
+      if (!confirm("¿Desea eliminar esta beneficiaria?")) return;
+      const data = obtenerDB();
+      data.beneficiarias = data.beneficiarias.filter(b => b.documento !== documento);
+      guardarDB(data);
+      renderTablas(data);
+      limpiarFormBeneficiaria();
+    };
+
+    window.eliminarAnuncio = function(id) {
+      if (!confirm("¿Desea eliminar este anuncio de la cartelera?")) return;
+      const data = obtenerDB();
+      data.anuncios = data.anuncios.filter(a => a.id !== id);
+      guardarDB(data);
+      renderTablas(data);
+    };
+  </script>
+</body>
+</html>
