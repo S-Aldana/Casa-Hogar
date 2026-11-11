@@ -4,14 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel Administrativo - Casa Hogar</title>
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
 
-  <!-- ENCABEZADO ADMIN -->
   <header class="bg-[#4c0839] text-white shadow-md">
     <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
       <div class="flex items-center gap-3">
@@ -32,13 +29,10 @@
     </div>
   </header>
 
-  <!-- CONTENIDO PRINCIPAL ADMIN -->
   <main id="panel-admin" class="hidden flex-grow max-w-7xl w-full mx-auto px-6 py-8 space-y-10">
     
-    <!-- GRID SUPERIOR: BENEFICIARIAS Y CARTELERA -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       
-      <!-- 1. GESTIÓN DE BENEFICIARIAS (CREAR / EDITAR) -->
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
         <div class="border-l-4 border-[#4c0839] pl-4 flex justify-between items-center">
           <div>
@@ -97,7 +91,6 @@
         </form>
       </section>
 
-      <!-- 2. PUBLICAR NUEVO ANUNCIO EN CARTELERA -->
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
         <div class="border-l-4 border-amber-400 pl-4">
           <h2 class="text-lg font-bold text-[#4c0839]">Publicar Anuncio en Cartelera</h2>
@@ -136,10 +129,8 @@
 
     </div>
 
-    <!-- SECCIÓN INFERIOR: TABLAS DE CONTROL (BENEFICIARIAS Y ANUNCIOS) -->
     <div class="grid grid-cols-1 gap-8">
       
-      <!-- Tabla Beneficiarias -->
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
         <div class="border-l-4 border-[#4c0839] pl-4 flex justify-between items-center">
           <div>
@@ -166,7 +157,6 @@
         </div>
       </section>
 
-      <!-- Tabla Anuncios (Cartelera) -->
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
         <div class="border-l-4 border-amber-400 pl-4 flex justify-between items-center">
           <div>
@@ -203,7 +193,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="common.js"></script>
 
-  <!-- SCRIPT INTEGRAL (BENEFICIARIAS Y CARTELERA) -->
   <script>
     let datos = { anuncios: [], beneficiarias: [] };
 
@@ -216,7 +205,6 @@
       configurarFormularios();
       if (window.lucide) lucide.createIcons();
 
-      // Solo entra quien tenga sesión de administradora; el login está en el index
       if (!SUPABASE_CONFIGURADO) { irAlInicio(); return; }
 
       cliente().auth.onAuthStateChange(evento => {
@@ -236,7 +224,6 @@
       }
     });
 
-    // ---------- Datos ----------
     async function recargarTodo() {
       try {
         const [anuncios, beneficiarias] = await Promise.all([listarAnuncios(), listarBeneficiarias()]);
@@ -255,7 +242,6 @@
     }
 
     function configurarFormularios() {
-      // 1. Guardar o actualizar beneficiaria
       const btnReg = document.getElementById("btn-guardar-nina");
       const btnCancelar = document.getElementById("btn-cancelar-edicion");
       const editDocOriginal = document.getElementById("edit-doc-original");
@@ -301,7 +287,6 @@
 
       btnCancelar.onclick = limpiarFormBeneficiaria;
 
-      // 2. Publicar anuncio en cartelera
       const btnPub = document.getElementById("btn-publicar");
       btnPub.onclick = async function() {
         const titulo = document.getElementById("input-titulo").value.trim();
@@ -347,7 +332,6 @@
     }
 
     function renderTablas(data) {
-      // Beneficiarias
       const tbodyNinas = document.getElementById("tabla-beneficiarias");
       document.getElementById("contador-niñas").innerText = `${data.beneficiarias.length} registradas`;
 
@@ -376,7 +360,6 @@
         }).join('');
       }
 
-      // Anuncios
       const tbodyAnuncios = document.getElementById("tabla-anuncios");
       document.getElementById("contador-anuncios").innerText = `${data.anuncios.length} activos`;
 
@@ -402,7 +385,6 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    // Funciones globales de los botones de las tablas
     window.cargarParaModificar = function(documento) {
       const nina = datos.beneficiarias.find(b => b.documento === documento);
       if (!nina) return;

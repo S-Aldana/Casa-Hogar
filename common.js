@@ -1,11 +1,5 @@
-// ===== Capa de datos y utilidades compartidas (index.html + admin.html) =====
-// Conexión a Supabase. Requiere cargar antes la librería:
-// <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-// 1) PEGA AQUÍ los datos de tu proyecto (Project Settings → API)
 const SUPABASE_URL = "https://uklzdymjucqchmqzkusp.supabase.co";
 const SUPABASE_KEY = "sb_publishable_XpDcLabmx24ZihyonSWQIw_6vjucISh";
-// ¡NUNCA pongas aquí la clave "secret"! Solo la "publishable".
 
 const SUPABASE_CONFIGURADO = !SUPABASE_URL.includes("TU-PROYECTO") && !SUPABASE_KEY.includes("PEGA_AQUI");
 const sb = (SUPABASE_CONFIGURADO && window.supabase)
@@ -17,8 +11,6 @@ function cliente() {
   return sb;
 }
 
-// Única fuente de verdad de las categorías de la cartelera:
-// el admin las usa en el selector y el index en las tarjetas y el filtro.
 const CATEGORIAS = {
   reunion:     { label: "Reunión",     icon: "users",     badge: "bg-gray-800 text-white",      iconBox: "bg-gray-100 text-gray-800" },
   taller:      { label: "Taller",      icon: "book-open", badge: "bg-sky-600 text-white",       iconBox: "bg-sky-100 text-sky-700" },
@@ -33,7 +25,6 @@ function esc(v) {
   return String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-// "2026-11-15" -> "15 de Noviembre, 2026". Si es texto libre, lo deja igual.
 function formatFecha(f) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(f || "");
   if (!m) return f || "";
@@ -45,7 +36,6 @@ function hoyISO() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-// ---------- Datos (todas devuelven una promesa y lanzan error si algo falla) ----------
 
 async function listarAnuncios() {
   const { data, error } = await cliente().from("anuncios").select("*").order("id", { ascending: false });
@@ -84,14 +74,12 @@ async function eliminarBeneficiariaDB(documento) {
   if (error) throw error;
 }
 
-// Consulta pública: devuelve { nombre_corto, estado, detalle } o null si no existe
 async function consultarBeneficiaria(documento) {
   const { data, error } = await cliente().rpc("consultar_beneficiaria", { p_documento: documento });
   if (error) throw error;
   return (data && data[0]) || null;
 }
 
-// ---------- Sesión de la administradora ----------
 
 async function obtenerSesion() {
   const { data } = await cliente().auth.getSession();
@@ -107,7 +95,6 @@ async function cerrarSesion() {
   await cliente().auth.signOut();
 }
 
-// true solo si la cuenta con sesión está en la lista de es_admin() de la base de datos
 async function cuentaEsAdmin() {
   const { data, error } = await cliente().rpc("es_admin");
   return !error && data === true;
@@ -122,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
       menuDropdown.classList.toggle("hidden");
     });
 
-    // Cerrar el menú móvil al hacer clic en cualquier enlace interno
     const mobileLinks = menuDropdown.querySelectorAll("a, button");
     mobileLinks.forEach(el => {
       el.addEventListener("click", () => {
@@ -133,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Sincronizar el botón de sesión móvil con el de escritorio si es necesario
   const btnSesionMovil = document.getElementById("btn-sesion-movil");
   const btnSesionEscritorio = document.getElementById("btn-sesion");
   if (btnSesionMovil && btnSesionEscritorio) {

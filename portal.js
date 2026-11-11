@@ -1,4 +1,3 @@
-// ===== Portal público (index.html): cartelera + consulta de beneficiarias =====
 document.addEventListener("DOMContentLoaded", () => {
   iniciarCartelera();
   iniciarBuscador();
@@ -119,7 +118,6 @@ function iniciarBuscador() {
   });
 }
 
-// ---------- Botón "Iniciar sesión" de la administración ----------
 async function iniciarSesionAdmin() {
   const btn = document.getElementById("btn-sesion");
   const modal = document.getElementById("modal-login");
@@ -137,7 +135,6 @@ async function iniciarSesionAdmin() {
   const cerrar = () => modal.classList.add("hidden");
   const mostrarError = msg => { err.textContent = msg; err.classList.remove("hidden"); };
 
-  // Con sesión de administradora el botón lleva directo al panel
   btn.addEventListener("click", () => { if (esAdmin) location.href = "admin.html"; else abrir(); });
   document.getElementById("btn-cerrar-login").addEventListener("click", cerrar);
   modal.addEventListener("click", e => { if (e.target === modal) cerrar(); });
@@ -172,6 +169,6 @@ async function iniciarSesionAdmin() {
         esAdmin = true;
         texto.textContent = "Panel Admin";
       }
-    } catch (e) { /* sin conexión: el botón sigue como "Iniciar sesión" */ }
+    } catch (e) {}
   }
 }

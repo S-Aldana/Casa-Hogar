@@ -14,7 +14,6 @@
   <header class="bg-[#4c0839] text-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
       
-      <!-- LOGO E IDENTIFICACIÓN -->
       <div class="flex items-center gap-3">
         <img src="assets/logos/logo.jpg" alt="Logo Casa Hogar" class="w-10 h-10 rounded-full object-cover border-2 border-amber-300 shadow-sm">
         <div>
@@ -23,12 +22,10 @@
         </div>
       </div>
 
-      <!-- BOTÓN MENÚ HAMBURGUESA (MÓVIL) -->
       <button type="button" id="menu-movil-btn" class="md:hidden text-white hover:text-amber-300 transition focus:outline-none cursor-pointer p-1">
         <i data-lucide="menu" class="w-7 h-7"></i>
       </button>
 
-      <!-- NAVEGACIÓN ESCRITORIO (OCULTA EN MÓVIL) -->
       <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
         <a href="#cartelera" class="nav-link hover:text-amber-300 transition flex items-center gap-1.5 cursor-pointer">
           <i data-lucide="megaphone" class="w-4 h-4"></i> Cartelera
@@ -51,7 +48,6 @@
       </nav>
     </div>
 
-    <!-- MENÚ DESPLEGABLE MÓVIL (OCULTO POR DEFECTO) -->
     <div id="menu-movil-dropdown" class="hidden md:hidden bg-[#3b062c] border-t border-white/10 px-6 py-4 space-y-3">
       <a href="#cartelera" class="nav-link-movil block hover:text-amber-300 transition py-1.5 text-sm font-medium flex items-center gap-2">
         <i data-lucide="megaphone" class="w-4 h-4"></i> Cartelera
@@ -208,7 +204,6 @@
         <div class="lg:col-span-8 p-6 sm:p-8 flex flex-col justify-between bg-white space-y-6">
           <div id="carrusel-videos" class="flex gap-5 overflow-x-auto scroll-smooth pb-2 relative z-15 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
   
-            <!-- Video 1 -->
             <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
               <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
                 <video src="https://uklzdymjucqchmqzkusp.supabase.co/storage/v1/object/sign/videos/video_casa_hogar1.mp4?token=eyJraWQiOiI4Y2U3MDc5ZC04N2E2LTQzMDctODY0Yy1jMjBhYjM1MGU2MTIiLCJhbGciOiJFUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvdmlkZW9fY2FzYV9ob2dhcjEubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc5NDM0NzAxNiwiZXhwIjoyNDI1MDY3MDE2fQ.RUefa3S8AsX-jcpPlg-w2aeeFkH3_cDU-Ajtc1z7soNrYfsO-ENGUPhWltd_q9XppGeiDz8PfcAL4fplwjcKzA" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
@@ -225,7 +220,6 @@
               </div>
             </div>
 
-            <!-- Video 2 -->
             <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
               <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
                 <video src="https://uklzdymjucqchmqzkusp.supabase.co/storage/v1/object/sign/videos/video_casa_hogar2.mp4?token=eyJraWQiOiI4Y2U3MDc5ZC04N2E2LTQzMDctODY0Yy1jMjBhYjM1MGU2MTIiLCJhbGciOiJFUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvdmlkZW9fY2FzYV9ob2dhcjIubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc5NDM0NzA3MCwiZXhwIjoyNDI1MDY3MDcwfQ.9T64kjwRe7VRZn7U48i_6QA9pvkZQiXI2lCh9cAWnR1ThGGxuAQH8WcgB1FjyK9_9u5NOC9T5xco0lwqu8HqHg" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
@@ -242,7 +236,6 @@
               </div>
             </div>
 
-            <!-- Video 3 -->
             <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
               <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
                 <video src="https://uklzdymjucqchmqzkusp.supabase.co/storage/v1/object/sign/videos/video_casa_hogar3.mp4?token=eyJraWQiOiI4Y2U3MDc5ZC04N2E2LTQzMDctODY0Yy1jMjBhYjM1MGU2MTIiLCJhbGciOiJFUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvdmlkZW9fY2FzYV9ob2dhcjMubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc5NDM0NzA5NCwiZXhwIjoyNDI1MDY3MDk0fQ.gLkx1U46ZYn2tTv6a-Xi_NLSXAUAo-Wh5PoOnm86-mUIYnCI7xIB5pfl6loVoJq8oDbc6PxpyBWNpYerDWllog" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
@@ -259,7 +252,6 @@
               </div>
             </div>
 
-            <!-- Video 4 -->
             <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
               <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
                 <video src="https://uklzdymjucqchmqzkusp.supabase.co/storage/v1/object/sign/videos/video_casa_hogar4.mp4?token=eyJraWQiOiI4Y2U3MDc5ZC04N2E2LTQzMDctODY0Yy1jMjBhYjM1MGU2MTIiLCJhbGciOiJFUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvdmlkZW9fY2FzYV9ob2dhcjQubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc5NDM0NzEwNCwiZXhwIjoyNDI1MDY3MTA0fQ.5MEYXezV0KHyLDrzhXzte3kz2M8yXjA6-hWW3Vu-gYHCsxwaUO1QtZgxOAxzePIeII1HRNUBR1czLRv1rU8b6g" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
@@ -276,7 +268,6 @@
               </div>
             </div>
 
-            <!-- Video 5 -->
             <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
               <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
                 <video src="https://uklzdymjucqchmqzkusp.supabase.co/storage/v1/object/sign/videos/video_casa_hogar5.mp4?token=eyJraWQiOiI4Y2U3MDc5ZC04N2E2LTQzMDctODY0Yy1jMjBhYjM1MGU2MTIiLCJhbGciOiJFUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvdmlkZW9fY2FzYV9ob2dhcjUubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc5NDM0NzExMiwiZXhwIjoyNDI1MDY3MTEyfQ.wcUei6eWzCjYKY9UfFtrEbXMemjyCbKWpqItj2S59n97QQSpIBTsGhDujljfYoS43qasYxQ_W0JP7oqmiHRIQg" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
@@ -293,7 +284,6 @@
               </div>
             </div>
 
-            <!-- Video 6 -->
             <div class="card-video flex-none w-56 sm:w-64 bg-gray-900 rounded-2xl overflow-hidden shadow-sm border border-gray-200 flex flex-col relative group">
               <div class="relative h-[380px] w-full bg-black flex items-center justify-center overflow-hidden cursor-pointer wrapper-video">
                 <video src="https://uklzdymjucqchmqzkusp.supabase.co/storage/v1/object/sign/videos/video_casa_hogar6.mp4?token=eyJraWQiOiI4Y2U3MDc5ZC04N2E2LTQzMDctODY0Yy1jMjBhYjM1MGU2MTIiLCJhbGciOiJFUzI1NiJ9.eyJ1cmwiOiJ2aWRlb3MvdmlkZW9fY2FzYV9ob2dhcjYubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc5NDM0NzEyMiwiZXhwIjoyNDI1MDY3MTIyfQ.X09UU5HLQZPiyl1m2BrkAO81JCitzhAI1DHWqu5kFcXIp1Jd7tSwOLr08GIlW946mBJt6Ms8myw82rBB90-P_g" playsinline loop preload="metadata" class="w-full h-full object-cover"></video>
