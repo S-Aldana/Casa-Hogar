@@ -184,3 +184,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+async function listarBeneficiarias(filtroAnio = "", filtroMes = "", filtroSemana = "") {
+  let query = cliente().from("beneficiarias").select("*").order("nombre", { ascending: true });
+  const { data, error } = await query;
+  if (error) throw error;
+  
+  let lista = data || [];
+  
+  if (filtroAnio) {
+    lista = lista.filter(b => (b.creado_en || b.actualizado_en || "").startsWith(filtroAnio));
+  }
+  if (filtroMes) {
+    lista = lista.filter(b => {
+      const fechaStr = b.creado_en || b.actualizado_en || "";
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(fechaStr.split("T")[0]);
+      return m && parseInt(m[2], 10) === parseInt(filtroMes, 10);
+    });
+  }
+  return lista;
+}

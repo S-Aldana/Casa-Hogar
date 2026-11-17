@@ -43,14 +43,11 @@
             <h2 id="form-titulo" class="text-lg font-bold text-[#4c0839]">Registrar Beneficiaria</h2>
             <p id="form-subtitulo" class="text-xs text-gray-500">Añada o modifique una residente</p>
           </div>
-          <button id="btn-cancelar-edicion" type="button" class="hidden text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-lg transition font-medium cursor-pointer">
-            Cancelar
-          </button>
+          <button type="button" id="btn-cancelar-edicion" class="hidden text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-medium cursor-pointer">Cancelar edición</button>
         </div>
 
         <form id="form-beneficiaria" class="space-y-3" onsubmit="event.preventDefault();">
           <input type="hidden" id="edit-doc-original" value="">
-
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
               <label class="block text-xs font-semibold text-gray-700 mb-1">Nombre Completo</label>
@@ -79,6 +76,7 @@
               <select id="reg-estado" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
                 <option value="En estadía">En estadía</option>
                 <option value="Con permiso">Con permiso</option>
+                <option value="Retirada">Retirada</option>
               </select>
             </div>
             <div>
@@ -87,11 +85,11 @@
             </div>
           </div>
 
-          <button type="button" id="btn-guardar-nina" class="w-full bg-[#4c0839] hover:bg-[#340527] text-white py-2.5 rounded-xl text-sm font-medium transition shadow-sm cursor-pointer flex items-center justify-center gap-2 mt-2">
-            <i data-lucide="user-plus" class="w-4 h-4"></i>
+          <button type="button" id="btn-guardar-nina" class="w-full bg-[#4c0839] hover:bg-[#340527] text-white py-2.5 rounded-xl text-sm font-bold transition shadow-sm cursor-pointer flex items-center justify-center gap-2 mt-2">
+            <i data-lucide="save" class="w-4 h-4"></i>
             <span id="btn-texto-accion">Guardar Beneficiaria</span>
           </button>
-          <p id="msg-reg-nina" class="text-xs text-center font-semibold text-emerald-600 hidden">¡Operación exitosa en beneficiarias!</p>
+          <p id="msg-reg-nina" class="text-xs text-center font-semibold text-emerald-600 hidden">¡Beneficiaria guardada correctamente!</p>
         </form>
       </section>
 
@@ -202,12 +200,34 @@
     <div class="grid grid-cols-1 gap-8">
       
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
-        <div class="border-l-4 border-[#4c0839] pl-4 flex justify-between items-center">
+        <div class="border-l-4 border-[#4c0839] pl-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 class="text-lg font-bold text-[#4c0839]">Directorio de Beneficiarias</h2>
-            <p class="text-xs text-gray-500">Gestión de residentes activas</p>
+            <p class="text-xs text-gray-500">Gestión y consulta cronológica de residentes</p>
           </div>
-          <span class="text-xs bg-gray-100 text-gray-700 font-semibold px-3 py-1 rounded-full" id="contador-niñas">0 registradas</span>
+          <div class="flex flex-wrap items-center gap-2">
+            <select id="filtro-anio" class="text-xs bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#4c0839]">
+              <option value="">Todos los años</option>
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+            </select>
+            <select id="filtro-mes" class="text-xs bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#4c0839]">
+              <option value="">Todos los meses</option>
+              <option value="1">Enero</option>
+              <option value="2">Febrero</option>
+              <option value="3">Marzo</option>
+              <option value="4">Abril</option>
+              <option value="5">Mayo</option>
+              <option value="6">Junio</option>
+              <option value="7">Julio</option>
+              <option value="8">Agosto</option>
+              <option value="9">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
+            <span class="text-xs bg-gray-100 text-gray-700 font-semibold px-3 py-1 rounded-full" id="contador-niñas">0 registradas</span>
+          </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -248,6 +268,64 @@
               </tr>
             </thead>
             <tbody id="tabla-anuncios" class="divide-y divide-gray-100 text-xs"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="bg-white p-6 rounded-2xl shadow-sm border-2 border-[#4c0839]/20 space-y-6">
+        <div class="border-l-4 border-[#4c0839] pl-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-bold text-[#4c0839]">Registro Extendido de Niñas — Consolidado <span id="titulo-anio-reporte">2026</span></h2>
+            <p class="text-xs text-gray-500">Control mensual de ingresos, estados activos y descarga de informe oficial</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <select id="select-anio-extendido" class="text-xs bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 font-semibold text-gray-700 focus:outline-none focus:border-[#4c0839]">
+              <option value="2026" selected>Año 2026</option>
+              <option value="2025">Año 2025</option>
+            </select>
+            <button type="button" id="btn-descargar-reporte" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm cursor-pointer flex items-center gap-2">
+              <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+              <span>Descargar Informe 2026 (Excel/CSV)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-[#4c0839]/5 border border-[#4c0839]/15 rounded-2xl p-4">
+            <p class="text-xs font-semibold text-gray-500 uppercase">Niñas Este Mes (<span id="nombre-mes-actual">Actual</span>)</p>
+            <p id="kpi-ninas-mes" class="text-3xl font-extrabold text-[#4c0839] mt-1">0</p>
+            <p class="text-[11px] text-gray-500 mt-1">Registradas o actualizadas en el mes</p>
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+            <p class="text-xs font-semibold text-emerald-800 uppercase">En Estadía Activa</p>
+            <p id="kpi-en-estadia" class="text-3xl font-extrabold text-emerald-700 mt-1">0</p>
+            <p class="text-[11px] text-emerald-700/80 mt-1">Residentes actuales en Casa Hogar</p>
+          </div>
+          <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+            <p class="text-xs font-semibold text-amber-800 uppercase">Con Permiso</p>
+            <p id="kpi-con-permiso" class="text-3xl font-extrabold text-amber-700 mt-1">0</p>
+            <p class="text-[11px] text-amber-700/80 mt-1">Salidas temporales autorizadas</p>
+          </div>
+          <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4">
+            <p class="text-xs font-semibold text-sky-800 uppercase">Total Acumulado Año</p>
+            <p id="kpi-total-anio" class="text-3xl font-extrabold text-sky-700 mt-1">0</p>
+            <p class="text-[11px] text-sky-700/80 mt-1">Registros del año seleccionado</p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto border border-gray-200 rounded-2xl">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-gray-50 text-gray-700 border-b text-xs uppercase tracking-wider">
+                <th class="p-3 font-semibold">Mes</th>
+                <th class="p-3 font-semibold text-center">Niñas Registradas</th>
+                <th class="p-3 font-semibold text-center">En Estadía</th>
+                <th class="p-3 font-semibold text-center">Con Permiso</th>
+                <th class="p-3 font-semibold text-center">Retiradas</th>
+                <th class="p-3 font-semibold">Beneficiarias del Mes</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-registro-extendido" class="divide-y divide-gray-100 text-xs"></tbody>
           </table>
         </div>
       </section>
@@ -306,18 +384,160 @@
       }
     });
 
+    let todasLasBeneficiarias = [];
+
     async function recargarTodo() {
       try {
-        const tareas = [listarAnuncios(), listarBeneficiarias()];
+        const anioSel = document.getElementById("filtro-anio")?.value || "";
+        const mesSel = document.getElementById("filtro-mes")?.value || "";
+
+        const tareas = [listarAnuncios(), listarBeneficiarias(), listarBeneficiarias(anioSel, mesSel)];
         if (esSuperAdmin) tareas.push(listarUsuariosAdmin().catch(() => []));
-        const [anuncios, beneficiarias, usuarios = []] = await Promise.all(tareas);
+        
+        const [anuncios, todas, beneficiarias, usuarios = []] = await Promise.all(tareas);
+        todasLasBeneficiarias = todas;
         datos = { anuncios, beneficiarias, usuarios };
         renderTablas(datos);
+        renderRegistroExtendido();
       } catch (e) {
         console.error(e);
         alert("No se pudieron cargar los datos: " + (e.message || e));
       }
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const fAnio = document.getElementById("filtro-anio");
+      const fMes = document.getElementById("filtro-mes");
+      const sAnioExt = document.getElementById("select-anio-extendido");
+      const btnDesc = document.getElementById("btn-descargar-reporte");
+
+      if (fAnio) fAnio.onchange = recargarTodo;
+      if (fMes) fMes.onchange = recargarTodo;
+      if (sAnioExt) sAnioExt.onchange = renderRegistroExtendido;
+      if (btnDesc) btnDesc.onclick = descargarReporteAnualCSV;
+    });
+
+    function obtenerFechaRegistro(b) {
+      const raw = (b.creado_en || b.actualizado_en || "").split("T")[0];
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(raw);
+      if (!m) return null;
+      return { anio: m[1], mes: parseInt(m[2], 10), dia: parseInt(m[3], 10), iso: raw };
+    }
+
+    function renderRegistroExtendido() {
+      const anioSeleccionado = document.getElementById("select-anio-extendido")?.value || "2026";
+      const mesActual = new Date().getMonth() + 1;
+
+      document.getElementById("titulo-anio-reporte").innerText = anioSeleccionado;
+      document.getElementById("nombre-mes-actual").innerText = MESES[mesActual - 1];
+      document.querySelector("#btn-descargar-reporte span").innerText = `Descargar Informe ${anioSeleccionado} (Excel/CSV)`;
+
+      const delAnio = todasLasBeneficiarias.filter(b => {
+        const f = obtenerFechaRegistro(b);
+        return f && f.anio === anioSeleccionado;
+      });
+
+      const delMesActual = delAnio.filter(b => {
+        const f = obtenerFechaRegistro(b);
+        return f && f.mes === mesActual;
+      });
+
+      const enEstadia = todasLasBeneficiarias.filter(b => b.estado === "En estadía").length;
+      const conPermiso = todasLasBeneficiarias.filter(b => b.estado === "Con permiso").length;
+
+      document.getElementById("kpi-ninas-mes").innerText = delMesActual.length;
+      document.getElementById("kpi-en-estadia").innerText = enEstadia;
+      document.getElementById("kpi-con-permiso").innerText = conPermiso;
+      document.getElementById("kpi-total-anio").innerText = delAnio.length;
+
+      const tbody = document.getElementById("tabla-registro-extendido");
+      tbody.innerHTML = MESES.map((nombreMes, idx) => {
+        const numMes = idx + 1;
+        const grupo = delAnio.filter(b => obtenerFechaRegistro(b)?.mes === numMes);
+        const cEstadia = grupo.filter(b => b.estado === "En estadía").length;
+        const cPermiso = grupo.filter(b => b.estado === "Con permiso").length;
+        const cRetirada = grupo.filter(b => b.estado === "Retirada").length;
+        const nombres = grupo.length > 0 ? grupo.map(b => esc(b.nombre)).join(", ") : "Sin registros en este mes";
+        const resaltarMes = (numMes === mesActual && anioSeleccionado === String(new Date().getFullYear())) ? "bg-amber-50/60" : "";
+
+        return `
+          <tr class="hover:bg-gray-50 transition ${resaltarMes}">
+            <td class="p-3 font-bold text-[#4c0839]">${nombreMes} ${anioSeleccionado}</td>
+            <td class="p-3 text-center font-extrabold text-gray-900">${grupo.length}</td>
+            <td class="p-3 text-center text-emerald-700 font-semibold">${cEstadia}</td>
+            <td class="p-3 text-center text-amber-700 font-semibold">${cPermiso}</td>
+            <td class="p-3 text-center text-gray-600 font-semibold">${cRetirada}</td>
+            <td class="p-3 text-gray-600 max-w-md truncate" title="${nombres}">${nombres}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function descargarReporteAnualCSV() {
+      const anioSeleccionado = document.getElementById("select-anio-extendido")?.value || "2026";
+      const delAnio = todasLasBeneficiarias.filter(b => obtenerFechaRegistro(b)?.anio === anioSeleccionado);
+
+      const filas = [];
+      filas.push([`INFORME REGISTRO EXTENDIDO CASA HOGAR - FUNDACION SERVIMOS - AÑO ${anioSeleccionado}`]);
+      filas.push([`Fecha de generacion: ${hoyISO()}`]);
+      filas.push([]);
+      filas.push(["RESUMEN MENSUAL"]);
+      filas.push(["Mes", "Total Ninas", "En Estadia", "Con Permiso", "Retiradas"]);
+
+      MESES.forEach((nombreMes, idx) => {
+        const numMes = idx + 1;
+        const grupo = delAnio.filter(b => obtenerFechaRegistro(b)?.mes === numMes);
+        filas.push([
+          nombreMes,
+          grupo.length,
+          grupo.filter(b => b.estado === "En estadía").length,
+          grupo.filter(b => b.estado === "Con permiso").length,
+          grupo.filter(b => b.estado === "Retirada").length
+        ]);
+      });
+
+      filas.push(["TOTAL ANUAL", delAnio.length, delAnio.filter(b => b.estado === "En estadía").length, delAnio.filter(b => b.estado === "Con permiso").length, delAnio.filter(b => b.estado === "Retirada").length]);
+      filas.push([]);
+      filas.push(["DETALLE NOMINAL DE BENEFICIARIAS"]);
+      filas.push(["Mes", "Fecha Registro", "Documento", "Nombre Completo", "Acudiente", "Telefono", "Estado", "Detalle / Retorno"]);
+
+      MESES.forEach((nombreMes, idx) => {
+        const numMes = idx + 1;
+        const grupo = delAnio.filter(b => obtenerFechaRegistro(b)?.mes === numMes);
+        grupo.forEach(b => {
+          const f = obtenerFechaRegistro(b);
+          filas.push([
+            nombreMes,
+            f ? f.iso : "",
+            b.documento || "",
+            b.nombre || "",
+            b.acudiente || "No asignado",
+            b.telefono || "Sin registrar",
+            b.estado || "",
+            b.detalle || ""
+          ]);
+        });
+      });
+
+      const escaparCSV = val => `"${String(val ?? "").replace(/"/g, '""')}"`;
+      const contenidoCSV = "\uFEFF" + filas.map(r => r.map(escaparCSV).join(";")).join("\n");
+      const blob = new Blob([contenidoCSV], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Registro_Extendido_Casa_Hogar_${anioSeleccionado}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const fAnio = document.getElementById("filtro-anio");
+      const fMes = document.getElementById("filtro-mes");
+      if (fAnio) fAnio.onchange = recargarTodo;
+      if (fMes) fMes.onchange = recargarTodo;
+    });
 
     function mostrarMensaje(id) {
       const msg = document.getElementById(id);
