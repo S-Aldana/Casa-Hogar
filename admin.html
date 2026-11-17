@@ -4,18 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel Administrativo - Casa Hogar</title>
+  <link rel="icon" type="image/jpeg" href="assets/logos/logo.jpg">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
 
   <header class="bg-[#4c0839] text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex flex-wrap justify-between items-center gap-3">
       <div class="flex items-center gap-3">
         <img src="assets/logos/logo.jpg" alt="Logo" class="w-9 h-9 rounded-full object-cover border-2 border-amber-300">
         <div>
-          <h1 class="text-lg font-bold tracking-tight">Panel de Administración</h1>
-          <p class="text-xs text-amber-300">Gestión integral de beneficiarias y cartelera de anuncios</p>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-bold tracking-tight">Panel de Administración</h1>
+            <span id="badge-rol-usuario" class="hidden text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-400 text-black">Superadmin</span>
+          </div>
+          <p class="text-xs text-amber-300">Gestión integral de beneficiarias, cartelera y accesos</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -54,18 +58,18 @@
             </div>
             <div>
               <label class="block text-xs font-semibold text-gray-700 mb-1">Documento</label>
-              <input type="text" id="reg-documento" required  class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+              <input type="text" id="reg-documento" required class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
               <label class="block text-xs font-semibold text-gray-700 mb-1">Acudiente</label>
-              <input type="text" id="reg-acudiente"  class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+              <input type="text" id="reg-acudiente" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
             </div>
             <div>
               <label class="block text-xs font-semibold text-gray-700 mb-1">Teléfono</label>
-              <input type="text" id="reg-telefono"class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+              <input type="text" id="reg-telefono" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
             </div>
           </div>
 
@@ -100,7 +104,7 @@
         <form id="form-anuncio" class="space-y-3" onsubmit="event.preventDefault();">
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">Título del Aviso</label>
-            <input type="text" id="input-titulo" required  class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+            <input type="text" id="input-titulo" required class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
           </div>
 
           <div class="grid grid-cols-2 gap-2">
@@ -116,7 +120,7 @@
 
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">Contenido del Comunicado</label>
-            <textarea id="input-contenido" rows="2" required  class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]"></textarea>
+            <textarea id="input-contenido" rows="2" required class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c0839]"></textarea>
           </div>
 
           <button type="button" id="btn-publicar" class="w-full bg-amber-500 hover:bg-amber-600 text-black py-2.5 rounded-xl text-sm font-bold transition shadow-sm cursor-pointer flex items-center justify-center gap-2 mt-2">
@@ -128,6 +132,72 @@
       </section>
 
     </div>
+
+    <section id="modulo-superadmin" class="hidden bg-white p-6 rounded-2xl shadow-sm border-2 border-[#4c0839]/20 space-y-6">
+      <div class="border-l-4 border-[#4c0839] pl-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-lg font-bold text-[#4c0839]">Gestión de Usuarios y Accesos</h2>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#4c0839]/10 text-[#4c0839]">Superadministrador</span>
+          </div>
+          <p class="text-xs text-gray-500">Registre y autorice cuentas para coordinadoras o personal de la fundación</p>
+        </div>
+        <span class="text-xs bg-gray-100 text-gray-700 font-semibold px-3 py-1 rounded-full self-start sm:self-auto" id="contador-usuarios">0 usuarios</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <form id="form-usuario-admin" class="lg:col-span-5 bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-3" onsubmit="event.preventDefault();">
+          <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
+            <i data-lucide="shield-plus" class="w-4 h-4 text-[#4c0839]"></i>
+            <span>Autorizar Nuevo Usuario</span>
+          </h3>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Nombre del Funcionario</label>
+            <input type="text" id="admin-nombre" required placeholder="Ej. María Fernanda López" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Correo Institucional</label>
+            <input type="email" id="admin-correo" required placeholder="correo@fundacionservimos.com" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Contraseña Inicial</label>
+              <input type="password" id="admin-clave" required minlength="6" placeholder="Mínimo 6 caracteres" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">Perfil / Rol</label>
+              <select id="admin-rol" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#4c0839]">
+                <option value="coordinador">Coordinadora / Personal</option>
+                <option value="superadmin">Superadministrador</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="button" id="btn-crear-usuario" class="w-full bg-[#4c0839] hover:bg-[#340527] text-white py-2.5 rounded-xl text-sm font-medium transition shadow-sm cursor-pointer flex items-center justify-center gap-2 mt-1">
+            <i data-lucide="user-check" class="w-4 h-4"></i>
+            <span>Registrar y Autorizar</span>
+          </button>
+          <p id="msg-usuario-admin" class="text-xs text-center font-semibold text-emerald-600 hidden">¡Usuario autorizado correctamente!</p>
+        </form>
+
+        <div class="lg:col-span-7 overflow-x-auto border border-gray-200 rounded-2xl">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-gray-50 text-gray-700 border-b text-xs uppercase tracking-wider">
+                <th class="p-3 font-semibold">Usuario</th>
+                <th class="p-3 font-semibold">Rol</th>
+                <th class="p-3 font-semibold">Acceso</th>
+                <th class="p-3 font-semibold text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-usuarios-admin" class="divide-y divide-gray-100 text-xs"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
     <div class="grid grid-cols-1 gap-8">
       
@@ -194,7 +264,9 @@
   <script src="common.js"></script>
 
   <script>
-    let datos = { anuncios: [], beneficiarias: [] };
+    let datos = { anuncios: [], beneficiarias: [], usuarios: [] };
+    let esSuperAdmin = false;
+    let correoSesionActual = "";
 
     function irAlInicio() { location.replace("index.html"); }
 
@@ -213,8 +285,18 @@
       document.getElementById("btn-cerrar-sesion").onclick = async () => { await cerrarSesion(); };
 
       try {
-        if (!(await obtenerSesion())) { irAlInicio(); return; }
+        const sesion = await obtenerSesion();
+        if (!sesion) { irAlInicio(); return; }
         if (!(await cuentaEsAdmin())) { await cerrarSesion(); return; }
+
+        correoSesionActual = (sesion.user && sesion.user.email) || "";
+        esSuperAdmin = await cuentaEsSuperAdmin();
+
+        if (esSuperAdmin) {
+          document.getElementById("modulo-superadmin").classList.remove("hidden");
+          document.getElementById("badge-rol-usuario").classList.remove("hidden");
+        }
+
         document.getElementById("panel-admin").classList.remove("hidden");
         await recargarTodo();
         if (window.lucide) lucide.createIcons();
@@ -226,8 +308,10 @@
 
     async function recargarTodo() {
       try {
-        const [anuncios, beneficiarias] = await Promise.all([listarAnuncios(), listarBeneficiarias()]);
-        datos = { anuncios, beneficiarias };
+        const tareas = [listarAnuncios(), listarBeneficiarias()];
+        if (esSuperAdmin) tareas.push(listarUsuariosAdmin().catch(() => []));
+        const [anuncios, beneficiarias, usuarios = []] = await Promise.all(tareas);
+        datos = { anuncios, beneficiarias, usuarios };
         renderTablas(datos);
       } catch (e) {
         console.error(e);
@@ -314,6 +398,41 @@
           btnPub.disabled = false;
         }
       };
+
+      const btnCrearUsuario = document.getElementById("btn-crear-usuario");
+      btnCrearUsuario.onclick = async function() {
+        const nombre = document.getElementById("admin-nombre").value.trim();
+        const correo = document.getElementById("admin-correo").value.trim().toLowerCase();
+        const clave = document.getElementById("admin-clave").value;
+        const rol = document.getElementById("admin-rol").value;
+
+        if (!nombre || !correo || !clave) {
+          alert("Por favor, complete el nombre, correo institucional y contraseña inicial.");
+          return;
+        }
+        if (clave.length < 6) {
+          alert("La contraseña inicial debe tener al menos 6 caracteres.");
+          return;
+        }
+
+        btnCrearUsuario.disabled = true;
+        try {
+          await registrarUsuarioAdmin({ nombre, correo, clave, rol });
+          document.getElementById("admin-nombre").value = "";
+          document.getElementById("admin-correo").value = "";
+          document.getElementById("admin-clave").value = "";
+          document.getElementById("admin-rol").value = "coordinador";
+          await recargarTodo();
+          mostrarMensaje("msg-usuario-admin");
+        } catch (e) {
+          console.error(e);
+          alert(e && e.code === "23505"
+            ? "Este correo ya se encuentra registrado en el sistema."
+            : "No se pudo autorizar el usuario: " + ((e && e.message) || e));
+        } finally {
+          btnCrearUsuario.disabled = false;
+        }
+      };
     }
 
     function limpiarFormBeneficiaria() {
@@ -332,6 +451,50 @@
     }
 
     function renderTablas(data) {
+      if (esSuperAdmin) {
+        const tbodyUsuarios = document.getElementById("tabla-usuarios-admin");
+        document.getElementById("contador-usuarios").innerText = `${data.usuarios.length} usuarios`;
+
+        if (data.usuarios.length === 0) {
+          tbodyUsuarios.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">No hay usuarios administrativos registrados.</td></tr>`;
+        } else {
+          tbodyUsuarios.innerHTML = data.usuarios.map(u => {
+            const esSuper = u.rol === "superadmin";
+            const activo = u.activo !== false;
+            const esMismaCuenta = (u.correo || "").toLowerCase() === correoSesionActual.toLowerCase();
+            const rolBadge = esSuper
+              ? "bg-[#4c0839] text-white"
+              : "bg-sky-100 text-sky-800";
+            const rolTexto = esSuper ? "Superadmin" : "Coordinación";
+            const estadoBadge = activo
+              ? "bg-emerald-100 text-emerald-800"
+              : "bg-gray-200 text-gray-600";
+
+            return `
+              <tr class="hover:bg-gray-50 transition">
+                <td class="p-3">
+                  <span class="block font-bold text-gray-900">${esc(u.nombre || "Sin nombre")}</span>
+                  <span class="text-[11px] text-gray-500">${esc(u.correo)}</span>
+                </td>
+                <td class="p-3">
+                  <span class="px-2.5 py-0.5 rounded-full font-bold text-[10px] ${rolBadge}">${rolTexto}</span>
+                </td>
+                <td class="p-3">
+                  <span class="px-2.5 py-0.5 rounded-full font-bold text-[10px] ${estadoBadge}">${activo ? "Autorizado" : "Suspendido"}</span>
+                </td>
+                <td class="p-3 text-center space-x-1.5 whitespace-nowrap">
+                  ${esMismaCuenta
+                    ? `<span class="text-[11px] text-gray-400 font-medium">Sesión actual</span>`
+                    : `<button onclick="alternarAccesoAdmin('${esc(u.id)}', ${!activo})" class="bg-amber-50 hover:bg-amber-100 text-amber-800 px-2.5 py-1 rounded-lg transition font-medium cursor-pointer">${activo ? "Suspender" : "Activar"}</button>
+                       <button onclick="eliminarUsuarioAdmin('${esc(u.id)}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-1 rounded-lg transition font-medium cursor-pointer">Revocar</button>`
+                  }
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
       const tbodyNinas = document.getElementById("tabla-beneficiarias");
       document.getElementById("contador-niñas").innerText = `${data.beneficiarias.length} registradas`;
 
@@ -384,6 +547,27 @@
 
       if (window.lucide) lucide.createIcons();
     }
+
+    window.alternarAccesoAdmin = async function(id, nuevoEstado) {
+      try {
+        await actualizarEstadoAdmin(id, nuevoEstado);
+        await recargarTodo();
+      } catch (e) {
+        console.error(e);
+        alert("No se pudo actualizar el estado del usuario: " + ((e && e.message) || e));
+      }
+    };
+
+    window.eliminarUsuarioAdmin = async function(id) {
+      if (!confirm("¿Desea revocar permanentemente el acceso a este usuario?")) return;
+      try {
+        await eliminarUsuarioAdminDB(id);
+        await recargarTodo();
+      } catch (e) {
+        console.error(e);
+        alert("No se pudo revocar el acceso: " + ((e && e.message) || e));
+      }
+    };
 
     window.cargarParaModificar = function(documento) {
       const nina = datos.beneficiarias.find(b => b.documento === documento);

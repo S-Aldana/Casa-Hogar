@@ -36,7 +36,6 @@ function hoyISO() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-
 async function listarAnuncios() {
   const { data, error } = await cliente().from("anuncios").select("*").order("id", { ascending: false });
   if (error) throw error;
@@ -80,6 +79,54 @@ async function consultarBeneficiaria(documento) {
   return (data && data[0]) || null;
 }
 
+async function listarUsuariosAdmin() {
+  const { data, error } = await cliente().from("administradores").select("*").order("creado_en", { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+async function registrarUsuarioAdmin(u) {
+  const { data, error } = await cliente().rpc("registrar_administrador", {
+    p_correo: u.correo,
+    p_clave: u.clave,
+    p_nombre: u.nombre,
+    p_rol: u.rol
+  });
+  if (error) {
+    const { error: errInsert } = await cliente().from("administradores").insert({
+      correo: u.correo,
+      nombre: u.nombre,
+      rol: u.rol,
+      activo: true
+    });
+    if (errInsert) throw error;
+  }
+  return data;
+}
+
+async function actualizarEstadoAdmin(id, activo) {
+  const { error } = await cliente().from("administradores").update({ activo }).eq("id", id);
+  if (error) throw error;
+}
+
+async function eliminarUsuarioAdminDB(id) {
+  const { error } = await cliente().from("administradores").delete().eq("id", id);
+  if (error) throw error;
+}
+
+async function cuentaEsSuperAdmin() {
+  const { data, error } = await cliente().rpc("es_superadmin");
+  if (!error && typeof data === "boolean") return data;
+  const sesion = await obtenerSesion();
+  if (!sesion || !sesion.user) return false;
+  const { data: adminData } = await cliente()
+    .from("administradores")
+    .select("rol")
+    .eq("correo", sesion.user.email)
+    .maybeSingle();
+  if (adminData && adminData.rol) return adminData.rol === "superadmin";
+  return await cuentaEsAdmin();
+}
 
 async function obtenerSesion() {
   const { data } = await cliente().auth.getSession();
