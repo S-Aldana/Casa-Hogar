@@ -7,6 +7,10 @@
   <link rel="icon" type="image/jpeg" href="assets/logos/logo.jpg">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .tab-btn.activa { color: #4c0839; border-bottom-color: #fbbf24; background: rgba(76,8,57,.04); }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
 
@@ -33,10 +37,22 @@
     </div>
   </header>
 
-  <main id="panel-admin" class="hidden flex-grow max-w-7xl w-full mx-auto px-6 py-8 space-y-10">
-    
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      
+  <main id="panel-admin" class="hidden flex-grow max-w-7xl w-full mx-auto px-6 py-6">
+
+    <nav role="tablist" aria-label="Secciones del panel" class="flex gap-1 overflow-x-auto border-b border-gray-200 mb-8">
+        <button type="button" role="tab" data-tab="beneficiarias" id="tab-btn-beneficiarias" class="tab-btn shrink-0 flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-4 border-transparent text-gray-500 hover:text-[#4c0839] transition cursor-pointer whitespace-nowrap">
+          <i data-lucide="users" class="w-4 h-4"></i><span>Beneficiarias</span>
+        </button>
+        <button type="button" role="tab" data-tab="cartelera" id="tab-btn-cartelera" class="tab-btn shrink-0 flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-4 border-transparent text-gray-500 hover:text-[#4c0839] transition cursor-pointer whitespace-nowrap">
+          <i data-lucide="megaphone" class="w-4 h-4"></i><span>Cartelera</span>
+        </button>
+        <span id="tab-wrap-usuarios" class="hidden"><button type="button" role="tab" data-tab="usuarios" id="tab-btn-usuarios" class="tab-btn shrink-0 flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-4 border-transparent text-gray-500 hover:text-[#4c0839] transition cursor-pointer whitespace-nowrap">
+          <i data-lucide="shield-check" class="w-4 h-4"></i><span>Usuarios y Accesos</span>
+        </button></span>
+    </nav>
+
+    <!-- PESTAÑA 1: BENEFICIARIAS -->
+    <div id="tab-beneficiarias" role="tabpanel" class="tab-panel space-y-8">
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
         <div class="border-l-4 border-[#4c0839] pl-4 flex justify-between items-center">
           <div>
@@ -92,7 +108,117 @@
           <p id="msg-reg-nina" class="text-xs text-center font-semibold text-emerald-600 hidden">¡Beneficiaria guardada correctamente!</p>
         </form>
       </section>
+      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+        <div class="border-l-4 border-[#4c0839] pl-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-lg font-bold text-[#4c0839]">Directorio de Beneficiarias</h2>
+            <p class="text-xs text-gray-500">Gestión y consulta cronológica de residentes</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <select id="filtro-anio" class="text-xs bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#4c0839]">
+              <option value="">Todos los años</option>
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+            </select>
+            <select id="filtro-mes" class="text-xs bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#4c0839]">
+              <option value="">Todos los meses</option>
+              <option value="1">Enero</option>
+              <option value="2">Febrero</option>
+              <option value="3">Marzo</option>
+              <option value="4">Abril</option>
+              <option value="5">Mayo</option>
+              <option value="6">Junio</option>
+              <option value="7">Julio</option>
+              <option value="8">Agosto</option>
+              <option value="9">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
+            <span class="text-xs bg-gray-100 text-gray-700 font-semibold px-3 py-1 rounded-full" id="contador-niñas">0 registradas</span>
+          </div>
+        </div>
 
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-gray-50 text-gray-700 border-b text-xs uppercase tracking-wider">
+                <th class="p-3 font-semibold">Documento</th>
+                <th class="p-3 font-semibold">Nombre</th>
+                <th class="p-3 font-semibold">Acudiente y Teléfono</th>
+                <th class="p-3 font-semibold">Estado</th>
+                <th class="p-3 font-semibold">Detalle</th>
+                <th class="p-3 font-semibold text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-beneficiarias" class="divide-y divide-gray-100 text-xs"></tbody>
+          </table>
+        </div>
+      </section>
+      <section class="bg-white p-6 rounded-2xl shadow-sm border-2 border-[#4c0839]/20 space-y-6">
+        <div class="border-l-4 border-[#4c0839] pl-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-bold text-[#4c0839]">Registro Extendido de Niñas — Consolidado <span id="titulo-anio-reporte">2026</span></h2>
+            <p class="text-xs text-gray-500">Control cronológico por mes de ingreso y descarga de informe oficial</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <select id="select-anio-extendido" class="text-xs bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 font-semibold text-gray-700 focus:outline-none focus:border-[#4c0839]">
+              <option value="2026" selected>Año 2026</option>
+            </select>
+            <button type="button" id="btn-descargar-excel" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm cursor-pointer flex items-center gap-2">
+              <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+              <span>Descargar Informe Oficial (Excel)</span>
+            </button>
+            <button type="button" id="btn-descargar-reporte" class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-3 py-2 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center gap-2">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              <span>CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-[#4c0839]/5 border border-[#4c0839]/15 rounded-2xl p-4">
+            <p class="text-xs font-semibold text-gray-500 uppercase">Ingresos Este Mes (<span id="nombre-mes-actual">Actual</span>)</p>
+            <p id="kpi-ninas-mes" class="text-3xl font-extrabold text-[#4c0839] mt-1">0</p>
+            <p class="text-[11px] text-gray-500 mt-1">Nuevas niñas registradas en el mes</p>
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+            <p class="text-xs font-semibold text-emerald-800 uppercase">En Estadía Activa</p>
+            <p id="kpi-en-estadia" class="text-3xl font-extrabold text-emerald-700 mt-1">0</p>
+            <p class="text-[11px] text-emerald-700/80 mt-1">Residentes actuales en Casa Hogar</p>
+          </div>
+          <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+            <p class="text-xs font-semibold text-amber-800 uppercase">Con Permiso</p>
+            <p id="kpi-con-permiso" class="text-3xl font-extrabold text-amber-700 mt-1">0</p>
+            <p class="text-[11px] text-amber-700/80 mt-1">Salidas temporales autorizadas</p>
+          </div>
+          <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4">
+            <p class="text-xs font-semibold text-sky-800 uppercase">Total Acumulado Año</p>
+            <p id="kpi-total-anio" class="text-3xl font-extrabold text-sky-700 mt-1">0</p>
+            <p class="text-[11px] text-sky-700/80 mt-1">Registros totales en el año</p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto border border-gray-200 rounded-2xl">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-gray-50 text-gray-700 border-b text-xs uppercase tracking-wider">
+                <th class="p-3 font-semibold">Mes de Ingreso</th>
+                <th class="p-3 font-semibold text-center">Nuevas Niñas</th>
+                <th class="p-3 font-semibold text-center">En Estadía</th>
+                <th class="p-3 font-semibold text-center">Con Permiso</th>
+                <th class="p-3 font-semibold text-center">Retiradas</th>
+                <th class="p-3 font-semibold">Listado de Beneficiarias del Mes</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-registro-extendido" class="divide-y divide-gray-100 text-xs"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- PESTAÑA 2: CARTELERA -->
+    <div id="tab-cartelera" role="tabpanel" class="tab-panel hidden space-y-8">
       <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
         <div class="border-l-4 border-amber-400 pl-4">
           <h2 class="text-lg font-bold text-[#4c0839]">Publicar Anuncio en Cartelera</h2>
@@ -128,10 +254,35 @@
           <p id="mensaje-anuncio" class="text-xs text-center font-semibold text-emerald-600 hidden">¡Anuncio publicado en la cartelera con éxito!</p>
         </form>
       </section>
+      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+        <div class="border-l-4 border-amber-400 pl-4 flex justify-between items-center">
+          <div>
+            <h2 class="text-lg font-bold text-[#4c0839]">Anuncios Actuales en Cartelera</h2>
+            <p class="text-xs text-gray-500">Comunicados visibles en el portal web</p>
+          </div>
+          <span class="text-xs bg-amber-100 text-amber-800 font-semibold px-3 py-1 rounded-full" id="contador-anuncios">0 activos</span>
+        </div>
 
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-gray-50 text-gray-700 border-b text-xs uppercase tracking-wider">
+                <th class="p-3 font-semibold">Fecha</th>
+                <th class="p-3 font-semibold">Categoría</th>
+                <th class="p-3 font-semibold">Título del Aviso</th>
+                <th class="p-3 font-semibold">Contenido</th>
+                <th class="p-3 font-semibold text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-anuncios" class="divide-y divide-gray-100 text-xs"></tbody>
+          </table>
+        </div>
+      </section>
     </div>
 
-    <section id="modulo-superadmin" class="hidden bg-white p-6 rounded-2xl shadow-sm border-2 border-[#4c0839]/20 space-y-6">
+    <!-- PESTAÑA 3: USUARIOS Y ACCESOS (solo superadmin) -->
+    <div id="tab-usuarios" role="tabpanel" class="tab-panel hidden space-y-8">
+      <section id="modulo-superadmin" class="hidden bg-white p-6 rounded-2xl shadow-sm border-2 border-[#4c0839]/20 space-y-6">
       <div class="border-l-4 border-[#4c0839] pl-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
           <div class="flex items-center gap-2">
@@ -196,139 +347,6 @@
         </div>
       </div>
     </section>
-
-    <div class="grid grid-cols-1 gap-8">
-      
-      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
-        <div class="border-l-4 border-[#4c0839] pl-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h2 class="text-lg font-bold text-[#4c0839]">Directorio de Beneficiarias</h2>
-            <p class="text-xs text-gray-500">Gestión y consulta cronológica de residentes</p>
-          </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <select id="filtro-anio" class="text-xs bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#4c0839]">
-              <option value="">Todos los años</option>
-              <option value="2026">2026</option>
-              <option value="2025">2025</option>
-            </select>
-            <select id="filtro-mes" class="text-xs bg-gray-50 border border-gray-300 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#4c0839]">
-              <option value="">Todos los meses</option>
-              <option value="1">Enero</option>
-              <option value="2">Febrero</option>
-              <option value="3">Marzo</option>
-              <option value="4">Abril</option>
-              <option value="5">Mayo</option>
-              <option value="6">Junio</option>
-              <option value="7">Julio</option>
-              <option value="8">Agosto</option>
-              <option value="9">Septiembre</option>
-              <option value="10">Octubre</option>
-              <option value="11">Noviembre</option>
-              <option value="12">Diciembre</option>
-            </select>
-            <span class="text-xs bg-gray-100 text-gray-700 font-semibold px-3 py-1 rounded-full" id="contador-niñas">0 registradas</span>
-          </div>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-sm">
-            <thead>
-              <tr class="bg-gray-50 text-gray-700 border-b text-xs uppercase tracking-wider">
-                <th class="p-3 font-semibold">Documento</th>
-                <th class="p-3 font-semibold">Nombre</th>
-                <th class="p-3 font-semibold">Acudiente y Teléfono</th>
-                <th class="p-3 font-semibold">Estado</th>
-                <th class="p-3 font-semibold">Detalle</th>
-                <th class="p-3 font-semibold text-center">Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-beneficiarias" class="divide-y divide-gray-100 text-xs"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
-        <div class="border-l-4 border-amber-400 pl-4 flex justify-between items-center">
-          <div>
-            <h2 class="text-lg font-bold text-[#4c0839]">Anuncios Actuales en Cartelera</h2>
-            <p class="text-xs text-gray-500">Comunicados visibles en el portal web</p>
-          </div>
-          <span class="text-xs bg-amber-100 text-amber-800 font-semibold px-3 py-1 rounded-full" id="contador-anuncios">0 activos</span>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-sm">
-            <thead>
-              <tr class="bg-gray-50 text-gray-700 border-b text-xs uppercase tracking-wider">
-                <th class="p-3 font-semibold">Fecha</th>
-                <th class="p-3 font-semibold">Categoría</th>
-                <th class="p-3 font-semibold">Título del Aviso</th>
-                <th class="p-3 font-semibold">Contenido</th>
-                <th class="p-3 font-semibold text-center">Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-anuncios" class="divide-y divide-gray-100 text-xs"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="bg-white p-6 rounded-2xl shadow-sm border-2 border-[#4c0839]/20 space-y-6">
-        <div class="border-l-4 border-[#4c0839] pl-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 class="text-lg font-bold text-[#4c0839]">Registro Extendido de Niñas — Consolidado <span id="titulo-anio-reporte">2026</span></h2>
-            <p class="text-xs text-gray-500">Control cronológico por mes de ingreso y descarga de informe oficial</p>
-          </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <select id="select-anio-extendido" class="text-xs bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 font-semibold text-gray-700 focus:outline-none focus:border-[#4c0839]">
-              <option value="2026" selected>Año 2026</option>
-            </select>
-            <button type="button" id="btn-descargar-reporte" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm cursor-pointer flex items-center gap-2">
-              <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
-              <span>Descargar Informe Oficial (CSV)</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="bg-[#4c0839]/5 border border-[#4c0839]/15 rounded-2xl p-4">
-            <p class="text-xs font-semibold text-gray-500 uppercase">Ingresos Este Mes (<span id="nombre-mes-actual">Actual</span>)</p>
-            <p id="kpi-ninas-mes" class="text-3xl font-extrabold text-[#4c0839] mt-1">0</p>
-            <p class="text-[11px] text-gray-500 mt-1">Nuevas niñas registradas en el mes</p>
-          </div>
-          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
-            <p class="text-xs font-semibold text-emerald-800 uppercase">En Estadía Activa</p>
-            <p id="kpi-en-estadia" class="text-3xl font-extrabold text-emerald-700 mt-1">0</p>
-            <p class="text-[11px] text-emerald-700/80 mt-1">Residentes actuales en Casa Hogar</p>
-          </div>
-          <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
-            <p class="text-xs font-semibold text-amber-800 uppercase">Con Permiso</p>
-            <p id="kpi-con-permiso" class="text-3xl font-extrabold text-amber-700 mt-1">0</p>
-            <p class="text-[11px] text-amber-700/80 mt-1">Salidas temporales autorizadas</p>
-          </div>
-          <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4">
-            <p class="text-xs font-semibold text-sky-800 uppercase">Total Acumulado Año</p>
-            <p id="kpi-total-anio" class="text-3xl font-extrabold text-sky-700 mt-1">0</p>
-            <p class="text-[11px] text-sky-700/80 mt-1">Registros totales en el año</p>
-          </div>
-        </div>
-
-        <div class="overflow-x-auto border border-gray-200 rounded-2xl">
-          <table class="w-full text-left border-collapse text-sm">
-            <thead>
-              <tr class="bg-gray-50 text-gray-700 border-b text-xs uppercase tracking-wider">
-                <th class="p-3 font-semibold">Mes de Ingreso</th>
-                <th class="p-3 font-semibold text-center">Nuevas Niñas</th>
-                <th class="p-3 font-semibold text-center">En Estadía</th>
-                <th class="p-3 font-semibold text-center">Con Permiso</th>
-                <th class="p-3 font-semibold text-center">Retiradas</th>
-                <th class="p-3 font-semibold">Listado de Beneficiarias del Mes</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-registro-extendido" class="divide-y divide-gray-100 text-xs"></tbody>
-          </table>
-        </div>
-      </section>
-
     </div>
 
   </main>
@@ -371,16 +389,36 @@
 
         if (esSuperAdmin) {
           document.getElementById("modulo-superadmin").classList.remove("hidden");
+          document.getElementById("tab-wrap-usuarios").classList.remove("hidden");
           document.getElementById("badge-rol-usuario").classList.remove("hidden");
         }
 
         document.getElementById("panel-admin").classList.remove("hidden");
+        mostrarPestana(location.hash.replace("#", "") || "beneficiarias");
         await recargarTodo();
         if (window.lucide) lucide.createIcons();
       } catch (e) {
         console.error(e);
         irAlInicio();
       }
+    });
+
+
+    // ---------- Pestañas del panel ----------
+    function mostrarPestana(id) {
+      if (id === "usuarios" && !esSuperAdmin) id = "beneficiarias";
+      if (!document.getElementById("tab-" + id)) id = "beneficiarias";
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.toggle("hidden", p.id !== "tab-" + id));
+      document.querySelectorAll(".tab-btn").forEach(b => {
+        const activa = b.dataset.tab === id;
+        b.classList.toggle("activa", activa);
+        b.setAttribute("aria-selected", activa ? "true" : "false");
+      });
+      try { history.replaceState(null, "", "#" + id); } catch (_) {}
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.onclick = () => mostrarPestana(b.dataset.tab));
     });
 
     let todasLasBeneficiarias = [];
@@ -412,6 +450,8 @@
       if (fAnio) fAnio.onchange = recargarTodo;
       if (fMes) fMes.onchange = recargarTodo;
       if (btnDesc) btnDesc.onclick = descargarReporteAnualCSV;
+      const btnXlsx = document.getElementById("btn-descargar-excel");
+      if (btnXlsx) btnXlsx.onclick = descargarReporteExcel;
     });
 
     function obtenerFechaIngreso(b) {
@@ -478,6 +518,154 @@
           </tr>
         `;
       }).join("");
+    }
+
+
+    async function descargarReporteExcel() {
+      if (typeof ExcelJS === "undefined") {
+        alert("No se pudo cargar el generador de Excel. Revise su conexión a internet o use la opción CSV.");
+        return;
+      }
+      const anio = document.getElementById("select-anio-extendido")?.value || "2026";
+      const delAnio = todasLasBeneficiarias.filter(b => obtenerFechaIngreso(b).anio === anio);
+
+      const GUINDA = "FF4C0839", AMBAR = "FFFBBF24", GRIS = "FFF3F4F6", BLANCO = "FFFFFFFF";
+      const borde = { style: "thin", color: { argb: "FFD1D5DB" } };
+      const bordes = { top: borde, left: borde, bottom: borde, right: borde };
+      const encabezado = (fila) => fila.eachCell(c => {
+        c.font = { bold: true, color: { argb: BLANCO }, size: 11 };
+        c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: GUINDA } };
+        c.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+        c.border = bordes;
+      });
+
+      const wb = new ExcelJS.Workbook();
+      wb.creator = "Casa Hogar - Fundación Servimos";
+      wb.created = new Date();
+
+      // ===== Hoja 1: Resumen =====
+      const r = wb.addWorksheet("Resumen " + anio, { views: [{ showGridLines: false }] });
+      r.columns = [{ width: 18 }, { width: 18 }, { width: 16 }, { width: 16 }, { width: 16 }];
+
+      r.mergeCells("A1:E1");
+      r.getCell("A1").value = "INFORME OFICIAL DE REGISTRO EXTENDIDO";
+      r.getCell("A1").font = { bold: true, size: 15, color: { argb: GUINDA } };
+      r.getCell("A1").alignment = { horizontal: "center", vertical: "middle" };
+      r.getRow(1).height = 28;
+
+      r.mergeCells("A2:E2");
+      r.getCell("A2").value = `Casa Hogar - Fundación Servimos  |  Año ${anio}`;
+      r.getCell("A2").font = { size: 11, color: { argb: "FF6B7280" } };
+      r.getCell("A2").alignment = { horizontal: "center" };
+
+      r.mergeCells("A3:E3");
+      r.getCell("A3").value = `Fecha de generación: ${hoyISO()}`;
+      r.getCell("A3").font = { size: 10, italic: true, color: { argb: "FF6B7280" } };
+      r.getCell("A3").alignment = { horizontal: "center" };
+
+      r.getCell("A5").value = "CONSOLIDADO MENSUAL DE INGRESOS Y ESTADOS";
+      r.getCell("A5").font = { bold: true, size: 12, color: { argb: GUINDA } };
+
+      const cab = r.getRow(6);
+      cab.values = ["Mes", "Nuevas niñas ingresadas", "En estadía", "Con permiso", "Retiradas"];
+      cab.height = 34;
+      encabezado(cab);
+
+      let fila = 7;
+      MESES.forEach((nombreMes, idx) => {
+        const grupo = delAnio.filter(b => obtenerFechaIngreso(b).mes === idx + 1);
+        const f = r.getRow(fila);
+        f.values = [
+          nombreMes,
+          grupo.length,
+          grupo.filter(b => b.estado === "En estadía").length,
+          grupo.filter(b => b.estado === "Con permiso").length,
+          grupo.filter(b => b.estado === "Retirada").length
+        ];
+        f.eachCell((c, col) => {
+          c.border = bordes;
+          c.alignment = { horizontal: col === 1 ? "left" : "center", vertical: "middle" };
+          if ((fila % 2) === 0) c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFAFAFA" } };
+        });
+        f.getCell(1).font = { bold: true };
+        fila++;
+      });
+
+      const tot = r.getRow(fila);
+      tot.values = [
+        "TOTAL ANUAL",
+        { formula: `SUM(B7:B${fila - 1})` },
+        { formula: `SUM(C7:C${fila - 1})` },
+        { formula: `SUM(D7:D${fila - 1})` },
+        { formula: `SUM(E7:E${fila - 1})` }
+      ];
+      tot.eachCell((c, col) => {
+        c.font = { bold: true, color: { argb: GUINDA } };
+        c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: AMBAR } };
+        c.border = bordes;
+        c.alignment = { horizontal: col === 1 ? "left" : "center", vertical: "middle" };
+      });
+
+      // ===== Hoja 2: Listado nominal =====
+      const l = wb.addWorksheet("Listado de Beneficiarias", { views: [{ state: "frozen", ySplit: 1 }] });
+      l.columns = [
+        { header: "Mes de ingreso", key: "mes", width: 16 },
+        { header: "Fecha de registro", key: "fecha", width: 18 },
+        { header: "Documento", key: "doc", width: 16 },
+        { header: "Nombre completo", key: "nombre", width: 32 },
+        { header: "Acudiente", key: "acudiente", width: 28 },
+        { header: "Teléfono", key: "tel", width: 16 },
+        { header: "Estado actual", key: "estado", width: 16 },
+        { header: "Detalle / Observaciones", key: "detalle", width: 48 }
+      ];
+      encabezado(l.getRow(1));
+      l.getRow(1).height = 28;
+
+      const colorEstado = {
+        "En estadía":  { bg: "FFD1FAE5", fg: "FF065F46" },
+        "Con permiso": { bg: "FFFEF3C7", fg: "FF92400E" },
+        "Retirada":    { bg: "FFE5E7EB", fg: "FF374151" }
+      };
+
+      delAnio
+        .map(b => ({ b, f: obtenerFechaIngreso(b) }))
+        .sort((x, y) => x.f.iso.localeCompare(y.f.iso))
+        .forEach(({ b, f }) => {
+          const row = l.addRow({
+            mes: MESES[f.mes - 1],
+            fecha: f.iso,
+            doc: b.documento || "",          // texto para no perder ceros ni usar notación científica
+            nombre: b.nombre || "",
+            acudiente: b.acudiente || "No asignado",
+            tel: b.telefono || "Sin registrar",
+            estado: b.estado || "",
+            detalle: b.detalle || ""
+          });
+          row.eachCell(c => {
+            c.border = bordes;
+            c.alignment = { vertical: "middle", wrapText: true, horizontal: "left" };
+          });
+          const ce = colorEstado[b.estado];
+          if (ce) {
+            const c = row.getCell("estado");
+            c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: ce.bg } };
+            c.font = { bold: true, color: { argb: ce.fg } };
+            c.alignment = { vertical: "middle", horizontal: "center" };
+          }
+        });
+
+      l.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: 8 } };
+
+      const buffer = await wb.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Informe_Oficial_Casa_Hogar_${anio}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     }
 
     function descargarReporteAnualCSV() {
@@ -797,6 +985,7 @@
     window.cargarParaModificar = function(documento) {
       const nina = datos.beneficiarias.find(b => b.documento === documento);
       if (!nina) return;
+      mostrarPestana("beneficiarias");
 
       document.getElementById("reg-nombre").value = nina.nombre;
       document.getElementById("reg-documento").value = nina.documento;
